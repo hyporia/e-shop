@@ -12,7 +12,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\OrderProcessingSystem.ServiceDefaults\OrderProcessingSystem.ServiceDefaults.csproj" />
+    <ProjectReference Include="..\..\Aspire\OrderProcessingSystem.ServiceDefaults\OrderProcessingSystem.ServiceDefaults.csproj" />
   </ItemGroup>
 
 </Project>

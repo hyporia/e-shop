@@ -1,9 +1,8 @@
-﻿
-using RabbitMQ.Client;
+﻿using RabbitMQ.Client;
 using RabbitMQ.Client.Events;
 using System.Text;
 
-namespace EmailService;
+namespace NotificationService.Api;
 
 internal class MessageQueueSubscriber : IHostedService
 {

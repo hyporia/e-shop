@@ -1,17 +1,24 @@
 <Solution>
-  <Folder Name="/Solution Items/">
-    <File Path=".editorconfig" />
-  </Folder>
   <Properties Name="Visual Studio">
     <Property Name="OpenWith" Value="17" />
   </Properties>
-  <Folder Name="/src/">
-    <Project Path="Aspire\OrderProcessingSystem.AppHost\OrderProcessingSystem.AppHost.csproj" />
-    <Project Path="Aspire\OrderProcessingSystem.ServiceDefaults\OrderProcessingSystem.ServiceDefaults.csproj" />
-    <Project Path="NotificationService\NotificationService.Api\NotificationService.Api.csproj" />
-    <Project Path="UserService\UserService.Api\UserService.Api.csproj" />
+  
+  <Folder Name="/Solution Items/">
+    <File Path=".editorconfig" />
   </Folder>
+
   <Folder Name="/tests/">
 
+  </Folder>
+  <Folder Name="/src/" />
+  <Folder Name="/src/Aspire/">
+    <Project Path="Aspire\OrderProcessingSystem.AppHost\OrderProcessingSystem.AppHost.csproj" />
+    <Project Path="Aspire\OrderProcessingSystem.ServiceDefaults\OrderProcessingSystem.ServiceDefaults.csproj" />
+  </Folder>
+  <Folder Name="/src/NotificationService/">
+    <Project Path="NotificationService\NotificationService.Api\NotificationService.Api.csproj" />
+  </Folder>
+  <Folder Name="/src/UserService/">
+    <Project Path="UserService\UserService.Api\UserService.Api.csproj" />
   </Folder>
 </Solution>

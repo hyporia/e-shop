@@ -9,9 +9,10 @@
 	<ItemGroup>
 		<PackageReference Include="Aspire.RabbitMQ.Client" Version="8.1.0" />
 	</ItemGroup>
-	
-  <ItemGroup>
-    <ProjectReference Include="..\OrderProcessingSystem.ServiceDefaults\OrderProcessingSystem.ServiceDefaults.csproj" />
-  </ItemGroup>
+
+	<ItemGroup>
+	  <ProjectReference Include="..\..\Aspire\OrderProcessingSystem.ServiceDefaults\OrderProcessingSystem.ServiceDefaults.csproj" />
+	  <ProjectReference Include="..\..\UserService\UserService.Api\UserService.Api.csproj" />
+	</ItemGroup>
 
 </Project>

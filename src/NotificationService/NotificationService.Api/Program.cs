@@ -1,4 +1,4 @@
-using EmailService;
+using NotificationService.Api;
 
 var builder = WebApplication.CreateBuilder(args);
 
