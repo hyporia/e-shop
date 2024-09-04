@@ -1,5 +1,5 @@
 using UserService;
-
+using UserService.Infra.UseCaseHandlers.Extensions;
 var builder = WebApplication.CreateBuilder(args);
 
 builder.AddServiceDefaults();
@@ -11,6 +11,7 @@ builder.Services.AddControllers();
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 builder.Services.AddTransient<IEventPublisher, EventPublisher>();
+builder.Services.AddUseCaseHandlers();
 builder.AddRabbitMQClient("messaging");
 var app = builder.Build();
 

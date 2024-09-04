@@ -1,6 +1,7 @@
-﻿using Microsoft.AspNetCore.Mvc;
-using UserService.Controllers;
-using UserService.Events;
+﻿using MediatR;
+using Microsoft.AspNetCore.Mvc;
+using Shared.Infra.CQRS;
+using UserService.UseCases;
 
 namespace UserService.Api.Controllers;
 
@@ -8,18 +9,16 @@ namespace UserService.Api.Controllers;
 [Route("[controller]")]
 public class UserConroller : ControllerBase
 {
-    private readonly IEventPublisher _eventPublisher;
+    private readonly IMediator _mediator;
 
-    public UserConroller(IEventPublisher eventPublisher)
+    public UserConroller(IMediator mediator)
     {
-        _eventPublisher = eventPublisher;
+        _mediator = mediator;
     }
 
     [HttpPost]
-    public IActionResult Create([FromBody] CreateUserRequest request)
+    public async Task<EmptyCommandResponse> Create([FromBody] RegisterUser request)
     {
-        var userCreatedEvent = new UserCreatedEvent(request.Name, request.Email);
-        _eventPublisher.Publish(userCreatedEvent);
-        return Ok();
+        return await _mediator.Send(request);
     }
 }

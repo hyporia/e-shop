@@ -13,6 +13,7 @@
 
   <ItemGroup>
     <ProjectReference Include="..\..\Aspire\OrderProcessingSystem.ServiceDefaults\OrderProcessingSystem.ServiceDefaults.csproj" />
+    <ProjectReference Include="..\..\UserService.Infra.UseCaseHandlers\UserService.Infra.UseCaseHandlers.csproj" />
     <ProjectReference Include="..\UserService.Events\UserService.Events.csproj" />
   </ItemGroup>
 
