@@ -20,5 +20,7 @@
   </Folder>
   <Folder Name="/src/UserService/">
     <Project Path="UserService\UserService.Api\UserService.Api.csproj" />
+    <Project Path="UserService\UserService.Events\UserService.Events.csproj" Type="C#" /> 
+    <Project Path="UserService\UserService.UseCases\UserService.UseCases.csproj" Type="C#" /> 
   </Folder>
 </Solution>

@@ -1,6 +1,8 @@
 ﻿using Microsoft.AspNetCore.Mvc;
+using UserService.Controllers;
+using UserService.Events;
 
-namespace UserService.Controllers;
+namespace UserService.Api.Controllers;
 
 [ApiController]
 [Route("[controller]")]
