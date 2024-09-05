@@ -1,10 +1,33 @@
+using MassTransit;
 using NotificationService.Api;
+using System.Reflection;
 
 var builder = WebApplication.CreateBuilder(args);
 
-builder.AddRabbitMQClient("messaging");
+builder.Services.AddMassTransit(x =>
+{
+    x.SetKebabCaseEndpointNameFormatter();
 
-builder.Services.AddHostedService<MessageQueueSubscriber>();
+
+    x.SetInMemorySagaRepositoryProvider();
+
+    var entryAssembly = Assembly.GetEntryAssembly();
+
+    x.AddConsumers(entryAssembly);
+    x.AddSagaStateMachines(entryAssembly);
+    x.AddSagas(entryAssembly);
+    x.AddActivities(entryAssembly);
+
+    x.UsingRabbitMq((context, cfg) =>
+    {
+        var configService = context.GetRequiredService<IConfiguration>();
+        var connectionString = configService.GetConnectionString("rabbitmq");
+        cfg.Host(connectionString);
+
+        cfg.ConfigureEndpoints(context);
+    });
+});
+
 
 var app = builder.Build();
 

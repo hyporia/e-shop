@@ -22,9 +22,18 @@
     <Project Path="UserService\UserService.Api\UserService.Api.csproj" />
     <Project Path="UserService\UserService.Events\UserService.Events.csproj" /> 
     <Project Path="UserService\UserService.UseCases\UserService.UseCases.csproj" />
-    <Project Path="UserService.Infra.UseCaseHandlers\UserService.Infra.UseCaseHandlers.csproj" Type="C#" /> 
+    <Project Path="UserService\UserService.Handlers\UserService.Handlers.csproj" /> 
   </Folder>
   <Folder Name="/src/Shared/">
-    <Project Path="Shared.Infra.CQRS\Shared.Infra.CQRS.csproj" Type="C#" />
+    <Project Path="Shared\Shared.Infra.CQRS\Shared.Infra.CQRS.csproj" />
+  </Folder>
+  <Folder Name="/src/ProductService/">
+    <Project Path="ProductService\ProductService.Api\ProductService.Api.csproj" />
+  </Folder>
+  <Folder Name="/src/OrderService/">
+    <Project Path="OrderService\OrderService.Api\OrderService.Api.csproj" />
+  </Folder>
+  <Folder Name="/src/ShippingService/">
+    <Project Path="ShippingService\ShippingService.Api\ShippingService.Api.csproj" />
   </Folder>
 </Solution>

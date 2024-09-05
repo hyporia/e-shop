@@ -7,7 +7,7 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\..\Shared.Infra.CQRS\Shared.Infra.CQRS.csproj" />
+    <ProjectReference Include="..\..\Shared\Shared.Infra.CQRS\Shared.Infra.CQRS.csproj" />
   </ItemGroup>
 
 </Project>

@@ -1,5 +1,6 @@
-using UserService;
-using UserService.Infra.UseCaseHandlers.Extensions;
+using MassTransit;
+using System.Reflection;
+using UserService.Handlers.Extensions;
 var builder = WebApplication.CreateBuilder(args);
 
 builder.AddServiceDefaults();
@@ -10,9 +11,34 @@ builder.Services.AddControllers();
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
-builder.Services.AddTransient<IEventPublisher, EventPublisher>();
 builder.Services.AddUseCaseHandlers();
-builder.AddRabbitMQClient("messaging");
+builder.Services.AddMassTransit(x =>
+{
+    x.SetKebabCaseEndpointNameFormatter();
+
+
+    x.SetInMemorySagaRepositoryProvider();
+
+    var entryAssembly = Assembly.GetEntryAssembly();
+
+    x.AddConsumers(entryAssembly);
+    x.AddSagaStateMachines(entryAssembly);
+    x.AddSagas(entryAssembly);
+    x.AddActivities(entryAssembly);
+
+    //builder.Services.Configure<MassTransitHostOptions>(options =>
+    //{
+    //    options.WaitUntilStarted = true;
+    //});
+    x.UsingRabbitMq((context, cfg) =>
+    {
+        var configService = context.GetRequiredService<IConfiguration>();
+        var connectionString = configService.GetConnectionString("rabbitmq");
+        cfg.Host(connectionString);
+
+        cfg.ConfigureEndpoints(context);
+    });
+});
 var app = builder.Build();
 
 app.MapDefaultEndpoints();

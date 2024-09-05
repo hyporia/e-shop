@@ -1,6 +1,7 @@
 ﻿using Microsoft.Extensions.DependencyInjection;
+using UserService.Infra.UseCaseHandlers;
 
-namespace UserService.Infra.UseCaseHandlers.Extensions;
+namespace UserService.Handlers.Extensions;
 public static class ServiceCollectionExtensions
 {
     public static IServiceCollection AddUseCaseHandlers(this IServiceCollection services)
