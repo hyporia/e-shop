@@ -36,4 +36,9 @@
   <Folder Name="/src/ShippingService/">
     <Project Path="ShippingService\ShippingService.Api\ShippingService.Api.csproj" />
   </Folder>
+  <Folder Name="/src/Clients/">
+    <Project Path="Clients\OnlineShop\onlineshop.esproj" Type="54a90642-561a-4bb1-a94e-469adee60c69">
+      <Deploy />
+    </Project>
+  </Folder>
 </Solution>
