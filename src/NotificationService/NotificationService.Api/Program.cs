@@ -1,5 +1,4 @@
 using MassTransit;
-using NotificationService.Api;
 using System.Reflection;
 
 var builder = WebApplication.CreateBuilder(args);

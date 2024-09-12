@@ -1,4 +1,5 @@
 using MassTransit;
+using OrderProcessingSystem.ServiceDefaults;
 using System.Reflection;
 using UserService.Handlers.Extensions;
 var builder = WebApplication.CreateBuilder(args);

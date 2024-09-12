@@ -1,5 +1,4 @@
 ﻿using Microsoft.Extensions.DependencyInjection;
-using UserService.Infra.UseCaseHandlers;
 
 namespace UserService.Handlers.Extensions;
 public static class ServiceCollectionExtensions

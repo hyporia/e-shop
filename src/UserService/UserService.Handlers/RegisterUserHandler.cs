@@ -1,10 +1,10 @@
-﻿using MediatR;
+﻿using MassTransit;
+using MediatR;
 using Shared.Infra.CQRS;
-using UserService.UseCases;
-using MassTransit;
 using UserService.Events;
+using UserService.UseCases;
 
-namespace UserService.Infra.UseCaseHandlers;
+namespace UserService.Handlers;
 
 internal class RegisterUserHandler : IRequestHandler<RegisterUser, EmptyCommandResponse>
 {
@@ -17,7 +17,7 @@ internal class RegisterUserHandler : IRequestHandler<RegisterUser, EmptyCommandR
 
     public async Task<EmptyCommandResponse> Handle(RegisterUser request, CancellationToken cancellationToken)
     {
-        await _bus.Publish(new UserCreatedEvent(request.Name, request.Email), cancellationToken);
+        await _bus.Publish(new UserCreatedEvent(request.Email), cancellationToken);
         return new();
     }
 }
