@@ -1,6 +1,7 @@
 using MassTransit;
 using OrderProcessingSystem.ServiceDefaults;
 using System.Reflection;
+using UserService.Data.Extensions;
 using UserService.Handlers.Extensions;
 var builder = WebApplication.CreateBuilder(args);
 
@@ -13,6 +14,7 @@ builder.Services.AddControllers();
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 builder.Services.AddUseCaseHandlers();
+builder.Services.AddDatabase(builder.Configuration.GetConnectionString("postgresql")!);
 builder.Services.AddMassTransit(x =>
 {
     x.SetKebabCaseEndpointNameFormatter();

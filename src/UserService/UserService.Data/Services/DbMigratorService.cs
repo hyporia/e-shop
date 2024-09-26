@@ -1,23 +1,20 @@
-namespace UserService.DatabaseMigrator;
+namespace UserService.Data.Services;
 
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Storage;
-using OpenTelemetry.Trace;
-using System.Diagnostics;
+using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Hosting;
+using Microsoft.Extensions.Logging;
 using UserService.Data;
 
-public class Worker(
+public class DbMigratorService(
     IServiceProvider serviceProvider,
-    IHostApplicationLifetime hostApplicationLifetime) : BackgroundService
+    IHostApplicationLifetime hostApplicationLifetime,
+    ILogger<DbMigratorService> logger) : BackgroundService
 {
-    public const string ActivitySourceName = "Migrations";
-    private static readonly ActivitySource s_activitySource = new(ActivitySourceName);
-
-    protected override async Task ExecuteAsync(CancellationToken cancellationToken)
+    public override async Task StartAsync(CancellationToken cancellationToken)
     {
-        using var activity = s_activitySource.StartActivity("Migrating database", ActivityKind.Client);
-
         try
         {
             using var scope = serviceProvider.CreateScope();
@@ -29,11 +26,16 @@ public class Worker(
         }
         catch (Exception ex)
         {
-            activity?.RecordException(ex);
-            throw;
+            logger.LogCritical(ex, "Cannot migrate the database");
+            hostApplicationLifetime.StopApplication();
         }
 
-        hostApplicationLifetime.StopApplication();
+        await base.StartAsync(cancellationToken);
+    }
+
+    protected override Task ExecuteAsync(CancellationToken cancellationToken)
+    {
+        return Task.CompletedTask;
     }
 
     private static async Task EnsureDatabaseAsync(UserDbContext dbContext, CancellationToken cancellationToken)
