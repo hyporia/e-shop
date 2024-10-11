@@ -3,4 +3,4 @@
 ################################################################################
 
 /.vs
-*/package-lock.json
+src/Clients/onlineshop/package-lock.json
