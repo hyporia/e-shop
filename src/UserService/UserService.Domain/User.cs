@@ -2,6 +2,5 @@
 
 namespace UserService.Domain;
 
-public class User(string userName) : IdentityUser(userName)
-{
-}
+public class User : IdentityUser
+{ }

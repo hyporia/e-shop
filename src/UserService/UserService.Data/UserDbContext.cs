@@ -1,18 +1,18 @@
 ﻿using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
-using Npgsql;
 using UserService.Domain;
 
 namespace UserService.Data;
 
-internal class UserDbContext : IdentityDbContext<User>
+public class UserDbContext : IdentityDbContext<User>
 {
     private const string SchemaName = "id";
     private readonly string _connectionString;
 
     public UserDbContext(string connectionString)
     {
-        _connectionString = new NpgsqlConnectionStringBuilder(connectionString).ConnectionString;
+        ArgumentException.ThrowIfNullOrWhiteSpace(connectionString);
+        _connectionString = connectionString;
     }
 
     protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder) =>
