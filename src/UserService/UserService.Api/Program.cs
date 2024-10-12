@@ -1,4 +1,5 @@
 using MassTransit;
+using Microsoft.AspNetCore.HttpLogging;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
@@ -7,6 +8,9 @@ using System.Reflection;
 using UserService.Data;
 using UserService.Data.Extensions;
 using UserService.Handlers.Extensions;
+using Microsoft.AspNetCore.Http;
+using System.Threading.Tasks;
+
 var builder = WebApplication.CreateBuilder(args);
 
 builder.AddServiceDefaults();
@@ -130,6 +134,12 @@ builder.Services.AddOpenIddict()
         // Register the ASP.NET Core host.
         options.UseAspNetCore();
     });
+
+builder.Services.AddHttpLogging(x =>
+{
+    x.LoggingFields = HttpLoggingFields.RequestPath | HttpLoggingFields.RequestMethod | HttpLoggingFields.ResponseStatusCode;
+});
+
 builder.Services.AddCors();
 builder.Services.AddAuthorization();
 var app = builder.Build();
@@ -143,10 +153,14 @@ if (app.Environment.IsDevelopment())
     app.UseSwaggerUI();
 }
 
+app.UseHttpLogging();
+
 app.UseHttpsRedirection();
 
 app.UseAuthentication();
 app.UseAuthorization();
+
+app.UseMiddleware<NotFoundMiddleware>();
 
 app.MapControllers();
 
