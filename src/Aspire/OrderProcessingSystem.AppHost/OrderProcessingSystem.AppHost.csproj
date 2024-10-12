@@ -22,7 +22,6 @@
     <ProjectReference Include="..\..\ProductService\ProductService.Api\ProductService.Api.csproj" />
     <ProjectReference Include="..\..\ShippingService\ShippingService.Api\ShippingService.Api.csproj" />
     <ProjectReference Include="..\..\UserService\UserService.Api\UserService.Api.csproj" />
-    <ProjectReference Include="..\..\UserService\UserService.DatabaseMigrator\UserService.DatabaseMigrator.csproj" />
   </ItemGroup>
 
 </Project>

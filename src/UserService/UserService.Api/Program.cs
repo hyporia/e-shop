@@ -8,8 +8,7 @@ using System.Reflection;
 using UserService.Data;
 using UserService.Data.Extensions;
 using UserService.Handlers.Extensions;
-using Microsoft.AspNetCore.Http;
-using System.Threading.Tasks;
+using UserService.Api.Middleware;
 
 var builder = WebApplication.CreateBuilder(args);
 
