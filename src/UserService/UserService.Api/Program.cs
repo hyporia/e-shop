@@ -1,15 +1,17 @@
 using MassTransit;
 using Microsoft.AspNetCore.HttpLogging;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
 using OrderProcessingSystem.ServiceDefaults;
 using System.Reflection;
-using UserService.Data;
-using UserService.Data.Extensions;
-using UserService.Handlers.Extensions;
 using UserService.Api.Middleware;
 using UserService.Api.Workers;
+using UserService.Data;
+using UserService.Data.Extensions;
+using UserService.Domain;
+using UserService.Handlers.Extensions;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -37,6 +39,14 @@ builder.Services.AddSwaggerGen(cfg =>
                     { "user_api", "user api scope" }
                 },
             },
+            Password = new OpenApiOAuthFlow
+            {
+                TokenUrl = new Uri($"https://localhost:{port}/connect/token"),
+                Scopes = new Dictionary<string, string>
+                {
+                    { "user_api", "user api scope" }
+                },
+            }
         }
     });
 
@@ -78,6 +88,13 @@ builder.Services.AddMassTransit(x =>
         cfg.ConfigureEndpoints(context);
     });
 });
+
+// Register the Identity services.
+builder.Services.AddIdentity<User, IdentityRole>()
+    .AddEntityFrameworkStores<UserDbContext>()
+    .AddDefaultTokenProviders();
+builder.Services.Configure<IdentityOptions>(builder.Configuration.GetSection(nameof(IdentityOptions)));
+
 builder.Services.AddOpenIddict()
     // Register the OpenIddict core components.
     .AddCore(options =>
@@ -97,8 +114,13 @@ builder.Services.AddOpenIddict()
         // Note: this sample only uses the authorization code and refresh token
         // flows but you can enable the other flows if you need to support implicit,
         // password or client credentials.
-        options.AllowAuthorizationCodeFlow()
-            .AllowRefreshTokenFlow();
+        options
+            .AllowAuthorizationCodeFlow()
+            .AllowRefreshTokenFlow()
+            .AllowPasswordFlow();
+
+        // Accept anonymous clients (i.e clients that don't send a client_id).
+        options.AcceptAnonymousClients();
 
         // Register the encryption credentials. This sample uses a symmetric
         // encryption key that is shared between the server and the Api2 sample
@@ -120,7 +142,8 @@ builder.Services.AddOpenIddict()
         // resolved from the authorization code to produce access and identity tokens.
         //
         options.UseAspNetCore()
-            .EnableAuthorizationEndpointPassthrough();
+            .EnableAuthorizationEndpointPassthrough()
+            .EnableTokenEndpointPassthrough();
 
     })
 
@@ -159,6 +182,7 @@ if (app.Environment.IsDevelopment())
     {
         cfg.OAuthClientId("swagger");
         cfg.OAuthUsePkce();
+        cfg.OAuthUsername("test");
         // cfg.OAuthClientSecret("secret");
     });
 }
@@ -173,28 +197,5 @@ app.UseAuthentication();
 app.UseAuthorization();
 
 app.MapControllers();
-
-// app.MapMethods("connect/authorize", [HttpMethods.Get, HttpMethods.Post], async (HttpContext context, IOpenIddictScopeManager manager) =>
-// {
-//     // Retrieve the OpenIddict server request from the HTTP context.
-//     var request = context.GetOpenIddictServerRequest();
-
-//     var identity = new ClaimsIdentity(
-//         authenticationType: TokenValidationParameters.DefaultAuthenticationType,
-//         nameType: Claims.Name,
-//         roleType: Claims.Role);
-
-//     identity.AddClaim(new Claim(Claims.Subject, request.ClientId!));
-
-//     identity.SetScopes(request.GetScopes());
-
-
-//     identity.SetResources(await manager.ListResourcesAsync(identity.GetScopes()).ToListAsync());
-
-//     // Allow all claims to be added in the access tokens.
-//     identity.SetDestinations(claim => [Destinations.AccessToken]);
-
-//     return Results.SignIn(new ClaimsPrincipal(identity), properties: null, OpenIddictServerAspNetCoreDefaults.AuthenticationScheme);
-// });
 
 app.Run();

@@ -20,11 +20,12 @@ var userServiceApi = builder.AddProject<Projects.UserService_Api>("userservice")
 
 // builder.AddProject<Projects.ShippingService_Api>("shippingservice-api");
 
-//builder.AddNpmApp("react", "../../Clients/onlineshop", scriptName: "dev")
-//    .WithReference(userServiceApi)
-//    .WithEnvironment("BROWSER", "none") // Disable opening browser on npm start
-//    .WithHttpEndpoint(env: "PORT")
-//    .WithExternalHttpEndpoints()
-//    .PublishAsDockerFile();
+builder.AddNpmApp("react", "../../Clients/onlineshop", scriptName: "dev")
+    .WithReference(userServiceApi)
+    .WithEnvironment("BROWSER", "none") // Disable opening browser on npm start
+    .WithHttpEndpoint(port: 3000, env: "VITE_PORT", isProxied: false)
+    .WithEnvironment("VITE_USERSERVICE_API_URL", userServiceApi.GetEndpoint("https"))
+    .WithExternalHttpEndpoints()
+    .PublishAsDockerFile();
 
 builder.Build().Run();
