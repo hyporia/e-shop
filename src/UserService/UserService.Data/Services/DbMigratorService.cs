@@ -66,18 +66,21 @@ public class DbMigratorService(
         });
     }
 
-    private static async Task SeedDataAsync(UserDbContext dbContext, CancellationToken cancellationToken)
+    private async Task SeedDataAsync(UserDbContext dbContext, CancellationToken cancellationToken)
     {
-        //var user = new User("Admin");
+        var strategy = dbContext.Database.CreateExecutionStrategy();
+        await strategy.ExecuteAsync(async () =>
+        {
+            // Seed the database
+            await using var transaction = await dbContext.Database.BeginTransactionAsync(cancellationToken);
+            dbContext.AddRange(GetEntitiesToSeed());
+            await dbContext.SaveChangesAsync(cancellationToken);
+            await transaction.CommitAsync(cancellationToken);
+        });
+    }
 
-        //var strategy = dbContext.Database.CreateExecutionStrategy();
-        //await strategy.ExecuteAsync(async () =>
-        //{
-        //    // Seed the database
-        //    await using var transaction = await dbContext.Database.BeginTransactionAsync(cancellationToken);
-        //    await dbContext.Users.AddAsync(user, cancellationToken);
-        //    await dbContext.SaveChangesAsync(cancellationToken);
-        //    await transaction.CommitAsync(cancellationToken);
-        //});
+    private List<object> GetEntitiesToSeed()
+    {
+        return [];
     }
 }

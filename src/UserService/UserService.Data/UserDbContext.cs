@@ -16,7 +16,9 @@ public class UserDbContext : IdentityDbContext<User>
     }
 
     protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder) =>
-        optionsBuilder.UseNpgsql(_connectionString, cfg => cfg.MigrationsHistoryTable("__EFMigrationsHistory", SchemaName));
+        optionsBuilder
+            .UseOpenIddict()
+            .UseNpgsql(_connectionString, cfg => cfg.MigrationsHistoryTable("__EFMigrationsHistory", SchemaName));
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {

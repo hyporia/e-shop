@@ -6,7 +6,7 @@ public class NotFoundMiddleware(RequestDelegate next)
     {
         await next(context);
 
-        if (context.Response.StatusCode == 404)
+        if (context.Response.StatusCode == StatusCodes.Status404NotFound)
         {
             context.Response.ContentType = "text/plain";
             await context.Response.WriteAsync("Not found");
