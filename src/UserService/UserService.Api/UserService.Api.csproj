@@ -21,8 +21,7 @@
     <ProjectReference Include="..\..\Shared\Shared.Infra.CQRS\Shared.Infra.CQRS.csproj" />
     <ProjectReference Include="..\UserService.Data\UserService.Data.csproj" />
     <ProjectReference Include="..\UserService.Events\UserService.Events.csproj" />
-    <ProjectReference Include="..\UserService.Handlers\UserService.Handlers.csproj" />
-    <ProjectReference Include="..\UserService.UseCases\UserService.UseCases.csproj" />
+    <ProjectReference Include="..\UserService.Application\UserService.Application.csproj" />
   </ItemGroup>
 
 </Project>

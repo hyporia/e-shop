@@ -10,13 +10,6 @@ using UserService.Data.Extensions;
 using UserService.Handlers.Extensions;
 using UserService.Api.Middleware;
 using UserService.Api.Workers;
-using OpenIddict.Abstractions;
-using System.Security.Claims;
-using OpenIddict.Server.AspNetCore;
-using static OpenIddict.Abstractions.OpenIddictConstants;
-using Microsoft.AspNetCore;
-using Microsoft.AspNetCore.Authentication;
-using System.Globalization;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -153,6 +146,7 @@ builder.Services.AddHttpLogging(x =>
 
 builder.Services.AddCors();
 builder.Services.AddAuthorization();
+builder.Services.AddHttpContextAccessor();
 var app = builder.Build();
 
 app.MapDefaultEndpoints();
@@ -180,31 +174,27 @@ app.UseAuthorization();
 
 app.MapControllers();
 
-app.MapMethods("connect/authorize", [HttpMethods.Get, HttpMethods.Post], async (HttpContext context, IOpenIddictScopeManager manager) =>
-{
-    // Retrieve the OpenIddict server request from the HTTP context.
-    var request = context.GetOpenIddictServerRequest();
+// app.MapMethods("connect/authorize", [HttpMethods.Get, HttpMethods.Post], async (HttpContext context, IOpenIddictScopeManager manager) =>
+// {
+//     // Retrieve the OpenIddict server request from the HTTP context.
+//     var request = context.GetOpenIddictServerRequest();
 
-    // Create the claims-based identity that will be used by OpenIddict to generate tokens.
-    var identity = new ClaimsIdentity(
-        authenticationType: TokenValidationParameters.DefaultAuthenticationType,
-        nameType: Claims.Name,
-        roleType: Claims.Role);
+//     var identity = new ClaimsIdentity(
+//         authenticationType: TokenValidationParameters.DefaultAuthenticationType,
+//         nameType: Claims.Name,
+//         roleType: Claims.Role);
 
-    identity.AddClaim(new Claim(Claims.Subject, request.ClientId!));
-    // Note: in this sample, the client is granted all the requested scopes for the first identity (Alice)
-    // but for the second one (Bob), only the "api1" scope can be granted, which will cause requests sent
-    // to Zirku.Api2 on behalf of Bob to be automatically rejected by the OpenIddict validation handler,
-    // as the access token representing Bob won't contain the "resource_server_2" audience required by Api2.
-    identity.SetScopes(request.GetScopes());
+//     identity.AddClaim(new Claim(Claims.Subject, request.ClientId!));
+
+//     identity.SetScopes(request.GetScopes());
 
 
-    identity.SetResources(await manager.ListResourcesAsync(identity.GetScopes()).ToListAsync());
+//     identity.SetResources(await manager.ListResourcesAsync(identity.GetScopes()).ToListAsync());
 
-    // Allow all claims to be added in the access tokens.
-    identity.SetDestinations(claim => [Destinations.AccessToken]);
+//     // Allow all claims to be added in the access tokens.
+//     identity.SetDestinations(claim => [Destinations.AccessToken]);
 
-    return Results.SignIn(new ClaimsPrincipal(identity), properties: null, OpenIddictServerAspNetCoreDefaults.AuthenticationScheme);
-});
+//     return Results.SignIn(new ClaimsPrincipal(identity), properties: null, OpenIddictServerAspNetCoreDefaults.AuthenticationScheme);
+// });
 
 app.Run();

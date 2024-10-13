@@ -1,8 +1,5 @@
 ﻿using MediatR;
 using Microsoft.AspNetCore.Mvc;
-using Shared.Infra.CQRS;
-using UserService.UseCases;
-
 namespace UserService.Api.Controllers;
 
 [ApiController]
@@ -16,9 +13,9 @@ public class UserConroller : ControllerBase
         _mediator = mediator;
     }
 
-    [HttpPost]
-    public async Task<EmptyCommandResponse> Create([FromBody] RegisterUser request)
-    {
-        return await _mediator.Send(request);
-    }
+    // [HttpPost]
+    // public async Task<EmptyCommandResponse> Create([FromBody] RegisterUser request)
+    // {
+    //     return await _mediator.Send(request);
+    // }
 }
