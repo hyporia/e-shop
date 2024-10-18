@@ -10,7 +10,7 @@ namespace UserService.Api.Controllers;
 public class AccountController(UserManager<User> userManager) : ControllerBase
 {
     // POST: /Account/Register
-    [HttpPost("/Account/Register")]
+    [HttpPost("/account/register")]
     [AllowAnonymous]
     public async Task<IActionResult> Register([FromBody] RegisterUser request)
     {

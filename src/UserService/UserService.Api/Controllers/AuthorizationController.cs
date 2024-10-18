@@ -53,63 +53,62 @@ public class AuthorizationController(
     public async Task<IActionResult> Exchange()
     {
         var request = HttpContext.GetOpenIddictServerRequest();
-        if (request.IsPasswordGrantType())
+        if (request is null || !request.IsPasswordGrantType())
         {
-            var user = await userManager.FindByNameAsync(request.Username);
-            if (user == null)
+            throw new NotImplementedException("The specified grant type is not implemented.");
+        }
+
+        var user = await userManager.FindByNameAsync(request.Username);
+        if (user == null)
+        {
+            var properties = new AuthenticationProperties(new Dictionary<string, string?>
             {
-                var properties = new AuthenticationProperties(new Dictionary<string, string?>
-                {
-                    [OpenIddictServerAspNetCoreConstants.Properties.Error] = Errors.InvalidGrant,
-                    [OpenIddictServerAspNetCoreConstants.Properties.ErrorDescription] =
-                        "The username/password couple is invalid."
-                });
+                [OpenIddictServerAspNetCoreConstants.Properties.Error] = Errors.InvalidGrant,
+                [OpenIddictServerAspNetCoreConstants.Properties.ErrorDescription] =
+                    "The username/password couple is invalid."
+            });
 
-                return Forbid(properties, OpenIddictServerAspNetCoreDefaults.AuthenticationScheme);
-            }
+            return Forbid(properties, OpenIddictServerAspNetCoreDefaults.AuthenticationScheme);
+        }
 
-            // Validate the username/password parameters and ensure the account is not locked out.
-            var result = await signInManager.CheckPasswordSignInAsync(user, request.Password, lockoutOnFailure: true);
-            if (!result.Succeeded)
+        // Validate the username/password parameters and ensure the account is not locked out.
+        var result = await signInManager.CheckPasswordSignInAsync(user, request.Password, lockoutOnFailure: true);
+        if (!result.Succeeded)
+        {
+            var properties = new AuthenticationProperties(new Dictionary<string, string?>
             {
-                var properties = new AuthenticationProperties(new Dictionary<string, string?>
-                {
-                    [OpenIddictServerAspNetCoreConstants.Properties.Error] = Errors.InvalidGrant,
-                    [OpenIddictServerAspNetCoreConstants.Properties.ErrorDescription] =
-                        "The username/password couple is invalid."
-                });
+                [OpenIddictServerAspNetCoreConstants.Properties.Error] = Errors.InvalidGrant,
+                [OpenIddictServerAspNetCoreConstants.Properties.ErrorDescription] =
+                    "The username/password couple is invalid."
+            });
 
-                return Forbid(properties, OpenIddictServerAspNetCoreDefaults.AuthenticationScheme);
-            }
+            return Forbid(properties, OpenIddictServerAspNetCoreDefaults.AuthenticationScheme);
+        }
 
-            // Create the claims-based identity that will be used by OpenIddict to generate tokens.
-            var identity = new ClaimsIdentity(
-                authenticationType: TokenValidationParameters.DefaultAuthenticationType,
-                nameType: Claims.Name,
-                roleType: Claims.Role);
+        // Create the claims-based identity that will be used by OpenIddict to generate tokens.
+        var identity = new ClaimsIdentity(
+            authenticationType: TokenValidationParameters.DefaultAuthenticationType,
+            nameType: Claims.Name,
+            roleType: Claims.Role);
 
-            // Add the claims that will be persisted in the tokens.
-            identity.SetClaim(Claims.Subject, await userManager.GetUserIdAsync(user))
-            .SetClaim(Claims.Email, await userManager.GetEmailAsync(user))
-            .SetClaim(Claims.Name, await userManager.GetUserNameAsync(user))
-                    .SetClaim(Claims.PreferredUsername, await userManager.GetUserNameAsync(user))
-                    .SetClaims(Claims.Role, [.. (await userManager.GetRolesAsync(user))]);
+        // Add the claims that will be persisted in the tokens.
+        identity.SetClaim(Claims.Subject, user.Id)
+            .SetClaim(Claims.Email, user.Email)
+            .SetClaim(Claims.Name, user.UserName)
+            .SetClaims(Claims.Role, [.. (await userManager.GetRolesAsync(user))]);
 
-            // Set the list of scopes granted to the client application.
-            identity.SetScopes(new[]
-            {
+        // Set the list of scopes granted to the client application.
+        identity.SetScopes(new[]
+        {
                 Scopes.OpenId,
                 Scopes.Email,
                 Scopes.Profile,
                 Scopes.Roles
             }.Intersect(request.GetScopes()));
 
-            identity.SetDestinations(GetDestinations);
+        identity.SetDestinations(GetDestinations);
 
-            return SignIn(new ClaimsPrincipal(identity), OpenIddictServerAspNetCoreDefaults.AuthenticationScheme);
-        }
-
-        throw new NotImplementedException("The specified grant type is not implemented.");
+        return SignIn(new ClaimsPrincipal(identity), OpenIddictServerAspNetCoreDefaults.AuthenticationScheme);
     }
 
     private static IEnumerable<string> GetDestinations(Claim claim)
