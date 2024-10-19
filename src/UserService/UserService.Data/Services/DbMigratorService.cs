@@ -33,10 +33,7 @@ public class DbMigratorService(
         await base.StartAsync(cancellationToken);
     }
 
-    protected override Task ExecuteAsync(CancellationToken cancellationToken)
-    {
-        return Task.CompletedTask;
-    }
+    protected override Task ExecuteAsync(CancellationToken cancellationToken) => Task.CompletedTask;
 
     private static async Task EnsureDatabaseAsync(UserDbContext dbContext, CancellationToken cancellationToken)
     {
@@ -79,8 +76,5 @@ public class DbMigratorService(
         });
     }
 
-    private List<object> GetEntitiesToSeed()
-    {
-        return [];
-    }
+    private List<object> GetEntitiesToSeed() => [];
 }

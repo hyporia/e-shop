@@ -1,7 +1,8 @@
 var builder = DistributedApplication.CreateBuilder(args);
 
-var messaging = builder.AddRabbitMQ("rabbitmq")
-    .WithManagementPlugin();
+var messaging = builder
+    .AddRabbitMQ("rabbitmq");
+// .WithManagementPlugin();
 
 var userDb = builder
     .AddPostgres("postgresql");

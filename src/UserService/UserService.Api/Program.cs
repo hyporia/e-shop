@@ -1,13 +1,17 @@
 using MassTransit;
+using MediatR;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.HttpLogging;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
+using OpenIddict.Validation.AspNetCore;
 using OrderProcessingSystem.ServiceDefaults;
 using System.Reflection;
 using UserService.Api.Middleware;
 using UserService.Api.Workers;
+using UserService.Contracts.Queries.User;
 using UserService.Data;
 using UserService.Data.Extensions;
 using UserService.Domain;
@@ -167,7 +171,17 @@ builder.Services.AddHttpLogging(x =>
     x.LoggingFields = HttpLoggingFields.RequestPath | HttpLoggingFields.RequestMethod | HttpLoggingFields.ResponseStatusCode;
 });
 
-builder.Services.AddCors();
+// Add CORS services
+builder.Services.AddCors(options =>
+{
+    options.AddPolicy("AllowLocalhost3000", builder =>
+    {
+        builder.WithOrigins("http://localhost:3000")
+               .AllowAnyHeader()
+               .AllowAnyMethod();
+    });
+});
+
 builder.Services.AddAuthorization();
 builder.Services.AddHttpContextAccessor();
 var app = builder.Build();
@@ -193,9 +207,16 @@ app.UseHttpLogging();
 
 app.UseHttpsRedirection();
 
+// Apply the CORS policy
+app.UseCors("AllowLocalhost3000");
+
 app.UseAuthentication();
 app.UseAuthorization();
 
 app.MapControllers();
+
+app.MapGet("/user", [Authorize(AuthenticationSchemes = OpenIddictValidationAspNetCoreDefaults.AuthenticationScheme)]
+async (IMediator mediator, CancellationToken cancellationToken) => await mediator.Send(new GetUsers(), cancellationToken)
+);
 
 app.Run();
