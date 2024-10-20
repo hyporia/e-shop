@@ -52,6 +52,34 @@ public class DevelopmentAuthorizationDataSeeder(IServiceScopeFactory serviceScop
                     Requirements.Features.ProofKeyForCodeExchange,
                 },
             }, cancellationToken);
+
+            await manager.CreateAsync(new OpenIddictApplicationDescriptor
+            {
+                ClientId = "onlineshop",
+                ConsentType = ConsentTypes.Explicit,
+                ClientType = ClientTypes.Public,
+                RedirectUris =
+                {
+                    new Uri($"https://localhost:3000/login/callback"),
+                },
+                Permissions =
+                {
+                    Permissions.Endpoints.Authorization,
+                    Permissions.Endpoints.Logout,
+                    Permissions.Endpoints.Token,
+                    Permissions.GrantTypes.Password,
+                    Permissions.GrantTypes.RefreshToken,
+                    Permissions.ResponseTypes.IdTokenToken,
+                    Permissions.Scopes.Email,
+                    Permissions.Scopes.Profile,
+                    Permissions.Scopes.Roles,
+                    Permissions.Prefixes.Scope + "user_api",
+                },
+                Requirements =
+                {
+                    Requirements.Features.ProofKeyForCodeExchange,
+                },
+            }, cancellationToken);
         }
 
         async Task CreateScopesAsync()

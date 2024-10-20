@@ -12,15 +12,3 @@ export type PostAccountRegisterData = {
 export type PostAccountRegisterResponse = (unknown);
 
 export type PostAccountRegisterError = unknown;
-
-export type GetConnectAuthorizeResponse = (unknown);
-
-export type GetConnectAuthorizeError = unknown;
-
-export type PostConnectAuthorizeResponse = (unknown);
-
-export type PostConnectAuthorizeError = unknown;
-
-export type PostConnectTokenResponse = (unknown);
-
-export type PostConnectTokenError = unknown;

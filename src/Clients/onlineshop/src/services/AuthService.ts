@@ -18,9 +18,9 @@ export async function isAuthenticated() {
   return !!token;
 }
 
-export async function sendOAuthRequest(
+export async function login(
   signInData: SigninResourceOwnerCredentialsArgs
-) {
+) : Promise<User> {
   return await userManager.signinResourceOwnerCredentials(signInData);
 }
 

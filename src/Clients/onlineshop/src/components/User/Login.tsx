@@ -1,13 +1,15 @@
 import React, { useState } from "react";
+import { login } from "../../services/AuthService";
 
 const Login: React.FC = () => {
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     // Handle login logic here
-    console.log("Login:", { username, password });
+    const loginResult = await login({ username, password });
+    console.log("Login:", { loginResult });
   };
 
   return (

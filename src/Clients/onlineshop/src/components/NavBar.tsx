@@ -21,12 +21,16 @@ const NavBar = ({ isAuthenticated, user }: NavBarProps): JSX.Element => {
             </li>
           </>
         )}
-        <li>
-          <NavLink to="/login">Login</NavLink>
-        </li>
-        <li>
-          <NavLink to="/register">Register</NavLink>
-        </li>
+        {!isAuthenticated && (
+          <>
+            <li>
+              <NavLink to="/login">Login</NavLink>
+            </li>
+            <li>
+              <NavLink to="/register">Register</NavLink>
+            </li>
+          </>
+        )}
       </ul>
     </nav>
   );
