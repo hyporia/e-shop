@@ -1,12 +1,8 @@
-import { User } from "oidc-client-ts";
 import { NavLink } from "react-router-dom";
+import { useAuth } from "../utils/authContext";
 
-interface NavBarProps {
-  isAuthenticated: boolean;
-  user: User | null;
-}
-
-const NavBar = ({ isAuthenticated, user }: NavBarProps): JSX.Element => {
+const NavBar = (): JSX.Element => {
+  const { isAuthenticated } = useAuth();
   return (
     <nav>
       <ul>
@@ -15,9 +11,11 @@ const NavBar = ({ isAuthenticated, user }: NavBarProps): JSX.Element => {
         </li>
         {isAuthenticated && (
           <>
-            <li>{user?.profile?.email}</li>
             <li>
-              <NavLink to="/Log out">Log out</NavLink>
+              <NavLink to="/profile">Profile</NavLink>
+            </li>
+            <li>
+              <NavLink to="/logout">Log out</NavLink>
             </li>
           </>
         )}

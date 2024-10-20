@@ -8,8 +8,7 @@ import { authConfig } from "../utils/authConfig";
 
 const userManager = new UserManager(authConfig.settings);
 export async function getUser(): Promise<User | null> {
-  const user = await userManager.getUser();
-  return user;
+  return await userManager.getUser();
 }
 
 export async function isAuthenticated() {

@@ -1,4 +1,6 @@
+using Microsoft.AspNetCore.Identity;
 using OpenIddict.Abstractions;
+using UserService.Domain;
 using static OpenIddict.Abstractions.OpenIddictConstants;
 
 namespace UserService.Api.Workers;
@@ -13,28 +15,56 @@ public class DevelopmentAuthorizationDataSeeder(IServiceScopeFactory serviceScop
 
     private static async Task SeedDataAsync(IServiceScope scope, CancellationToken cancellationToken)
     {
-        await CreateApplicationsAsync();
-        await CreateScopesAsync();
+        await CreateRolesAsync(scope);
+        await CreateCustomScopesAsync(scope, cancellationToken);
+        await CreateApplicationsAsync(scope, cancellationToken);
+        await CreateUsersAsync(scope);
+    }
 
-        async Task CreateApplicationsAsync()
+    public static async Task CreateRolesAsync(IServiceScope scope)
+    {
+        var manager = scope.ServiceProvider.GetRequiredService<RoleManager<IdentityRole>>();
+        foreach (var role in new[] { "admin", "user" })
         {
-            var manager = scope.ServiceProvider.GetRequiredService<IOpenIddictApplicationManager>();
-            if (await manager.FindByClientIdAsync("swagger", cancellationToken) is not null)
-                return;
+            if (await manager.FindByNameAsync(role) is not null)
+                continue;
 
-            var configuration = scope.ServiceProvider.GetRequiredService<IConfiguration>();
-            var port = configuration["ASPNETCORE_HTTPS_PORT"];
+            await manager.CreateAsync(new IdentityRole(role));
+        }
+    }
 
-            await manager.CreateAsync(new OpenIddictApplicationDescriptor
-            {
-                ClientId = "swagger",
-                ConsentType = ConsentTypes.Explicit,
-                ClientType = ClientTypes.Public,
-                RedirectUris =
+    private static async Task CreateCustomScopesAsync(IServiceScope scope, CancellationToken cancellationToken)
+    {
+        var manager = scope.ServiceProvider.GetRequiredService<IOpenIddictScopeManager>();
+        if (await manager.FindByNameAsync("user_api", cancellationToken) is not null)
+            return;
+
+        await manager.CreateAsync(new OpenIddictScopeDescriptor
+        {
+            Name = "user_api",
+            // Resources = { "users_server" }
+        }, cancellationToken);
+    }
+
+    private static async Task CreateApplicationsAsync(IServiceScope scope, CancellationToken cancellationToken)
+    {
+        var manager = scope.ServiceProvider.GetRequiredService<IOpenIddictApplicationManager>();
+        if (await manager.FindByClientIdAsync("swagger", cancellationToken) is not null)
+            return;
+
+        var configuration = scope.ServiceProvider.GetRequiredService<IConfiguration>();
+        var port = configuration["ASPNETCORE_HTTPS_PORT"];
+
+        await manager.CreateAsync(new OpenIddictApplicationDescriptor
+        {
+            ClientId = "swagger",
+            ConsentType = ConsentTypes.Explicit,
+            ClientType = ClientTypes.Public,
+            RedirectUris =
                 {
                     new Uri($"https://localhost:{port}/swagger/oauth2-redirect.html"),
                 },
-                Permissions =
+            Permissions =
                 {
                     Permissions.Endpoints.Authorization,
                     Permissions.Endpoints.Logout,
@@ -47,22 +77,22 @@ public class DevelopmentAuthorizationDataSeeder(IServiceScopeFactory serviceScop
                     Permissions.Scopes.Roles,
                     Permissions.Prefixes.Scope + "user_api",
                 },
-                Requirements =
+            Requirements =
                 {
                     Requirements.Features.ProofKeyForCodeExchange,
                 },
-            }, cancellationToken);
+        }, cancellationToken);
 
-            await manager.CreateAsync(new OpenIddictApplicationDescriptor
-            {
-                ClientId = "onlineshop",
-                ConsentType = ConsentTypes.Explicit,
-                ClientType = ClientTypes.Public,
-                RedirectUris =
+        await manager.CreateAsync(new OpenIddictApplicationDescriptor
+        {
+            ClientId = "onlineshop",
+            ConsentType = ConsentTypes.Explicit,
+            ClientType = ClientTypes.Public,
+            RedirectUris =
                 {
                     new Uri($"https://localhost:3000/login/callback"),
                 },
-                Permissions =
+            Permissions =
                 {
                     Permissions.Endpoints.Authorization,
                     Permissions.Endpoints.Logout,
@@ -75,25 +105,27 @@ public class DevelopmentAuthorizationDataSeeder(IServiceScopeFactory serviceScop
                     Permissions.Scopes.Roles,
                     Permissions.Prefixes.Scope + "user_api",
                 },
-                Requirements =
+            Requirements =
                 {
                     Requirements.Features.ProofKeyForCodeExchange,
                 },
-            }, cancellationToken);
-        }
+        }, cancellationToken);
+    }
 
-        async Task CreateScopesAsync()
+    private static async Task CreateUsersAsync(IServiceScope scope)
+    {
+        var manager = scope.ServiceProvider.GetRequiredService<UserManager<User>>();
+        if (await manager.FindByEmailAsync("admin@localhost") is not null)
+            return;
+
+        var user = new User
         {
-            var manager = scope.ServiceProvider.GetRequiredService<IOpenIddictScopeManager>();
-            if (await manager.FindByNameAsync("user_api", cancellationToken) is not null)
-                return;
+            Email = "admin@localhost",
+            UserName = "admin",
+        };
 
-            await manager.CreateAsync(new OpenIddictScopeDescriptor
-            {
-                Name = "user_api",
-                // Resources = { "users_server" }
-            }, cancellationToken);
-        }
+        await manager.CreateAsync(user, "123");
+        await manager.AddToRolesAsync(user, ["admin", "user"]);
     }
 
     public Task StopAsync(CancellationToken cancellationToken) => Task.CompletedTask;
