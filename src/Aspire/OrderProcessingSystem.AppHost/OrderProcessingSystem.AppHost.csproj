@@ -1,5 +1,5 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
-
+  <Sdk Name="Aspire.AppHost.Sdk" Version="9.0.0" />
   <PropertyGroup>
     <OutputType>Exe</OutputType>
     <TargetFramework>net8.0</TargetFramework>
@@ -8,14 +8,12 @@
     <IsAspireHost>true</IsAspireHost>
     <UserSecretsId>3f85cb09-4311-488f-a1aa-5ab6cdb9ffe9</UserSecretsId>
   </PropertyGroup>
-
   <ItemGroup>
-    <PackageReference Include="Aspire.Hosting.AppHost" Version="8.1.0" />
-    <PackageReference Include="Aspire.Hosting.NodeJs" Version="8.2.0" />
-    <PackageReference Include="Aspire.Hosting.PostgreSQL" Version="8.2.0" />
-    <PackageReference Include="Aspire.Hosting.RabbitMQ" Version="8.1.0" />
+    <PackageReference Include="Aspire.Hosting.AppHost" />
+    <PackageReference Include="Aspire.Hosting.NodeJs" />
+    <PackageReference Include="Aspire.Hosting.PostgreSQL" />
+    <PackageReference Include="Aspire.Hosting.RabbitMQ" />
   </ItemGroup>
-
   <ItemGroup>
     <ProjectReference Include="..\..\NotificationService\NotificationService.Api\NotificationService.Api.csproj" />
     <ProjectReference Include="..\..\OrderService\OrderService.Api\OrderService.Api.csproj" />
@@ -23,5 +21,4 @@
     <ProjectReference Include="..\..\ShippingService\ShippingService.Api\ShippingService.Api.csproj" />
     <ProjectReference Include="..\..\UserService\UserService.Api\UserService.Api.csproj" />
   </ItemGroup>
-
 </Project>

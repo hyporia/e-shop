@@ -4,16 +4,16 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.HttpLogging;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
+using OpenIddict.Validation.AspNetCore;
 using OrderProcessingSystem.ServiceDefaults;
 using UserService.Api.Extensions;
 using UserService.Api.Middleware;
 using UserService.Api.Workers;
+using UserService.Application.Extensions;
 using UserService.Contracts.Queries.User;
 using UserService.Data;
 using UserService.Data.Extensions;
 using UserService.Domain;
-using UserService.Application.Extensions;
-using OpenIddict.Validation.AspNetCore;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -31,30 +31,32 @@ builder.Services.AddMassTransit();
 
 // Register the Identity services.
 builder.Services.AddIdentity<User, IdentityRole>()
-    .AddEntityFrameworkStores<UserDbContext>()
-    .AddDefaultTokenProviders();
+	.AddEntityFrameworkStores<UserDbContext>()
+	.AddDefaultTokenProviders();
 
 builder.Services.Configure<IdentityOptions>(builder.Configuration.GetSection(nameof(IdentityOptions)));
 
 builder.Services.AddOpenIddict(builder.Environment.IsDevelopment());
 
 if (builder.Environment.IsDevelopment())
-    builder.Services.AddHostedService<DevelopmentAuthorizationDataSeeder>();
+{
+	builder.Services.AddHostedService<DevelopmentAuthorizationDataSeeder>();
+}
 
 builder.Services.AddHttpLogging(x =>
 {
-    x.LoggingFields = HttpLoggingFields.RequestPath | HttpLoggingFields.RequestMethod | HttpLoggingFields.ResponseStatusCode;
+	x.LoggingFields = HttpLoggingFields.RequestPath | HttpLoggingFields.RequestMethod | HttpLoggingFields.ResponseStatusCode;
 });
 
 // Add CORS services
 builder.Services.AddCors(options =>
 {
-    options.AddPolicy("AllowLocalhost3000", builder =>
-    {
-        builder.WithOrigins("http://localhost:3000")
-               .AllowAnyHeader()
-               .AllowAnyMethod();
-    });
+	options.AddPolicy("AllowLocalhost3000", builder =>
+	{
+		builder.WithOrigins("http://localhost:3000")
+			   .AllowAnyHeader()
+			   .AllowAnyMethod();
+	});
 });
 
 builder.Services.AddAuthorization();
@@ -66,13 +68,13 @@ app.MapDefaultEndpoints();
 // Configure the HTTP request pipeline.
 if (app.Environment.IsDevelopment())
 {
-    app.UseSwagger();
-    app.UseSwaggerUI(cfg =>
-    {
-        cfg.OAuthClientId("swagger");
-        cfg.OAuthUsePkce();
-        cfg.OAuthUsername("test");
-    });
+	app.UseSwagger();
+	app.UseSwaggerUI(cfg =>
+	{
+		cfg.OAuthClientId("swagger");
+		cfg.OAuthUsePkce();
+		cfg.OAuthUsername("test");
+	});
 }
 
 app.UseMiddleware<NotFoundMiddleware>();

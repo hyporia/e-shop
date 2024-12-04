@@ -1,18 +1,15 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk.Web">
-
   <PropertyGroup>
-    <TargetFramework>net8.0</TargetFramework>
+    <TargetFramework>net9.0</TargetFramework>
     <Nullable>enable</Nullable>
     <ImplicitUsings>enable</ImplicitUsings>
   </PropertyGroup>
-
-	<ItemGroup>
-		<PackageReference Include="MassTransit.RabbitMQ" Version="8.2.5" />
-	</ItemGroup>
-
-	<ItemGroup>
-	  <ProjectReference Include="..\..\Aspire\OrderProcessingSystem.ServiceDefaults\OrderProcessingSystem.ServiceDefaults.csproj" />
-	  <ProjectReference Include="..\..\UserService\UserService.Api\UserService.Api.csproj" />
-	</ItemGroup>
-
+  <ItemGroup>
+    <PackageReference Include="MassTransit.RabbitMQ" />
+    <PackageReference Include="MassTransit" VersionOverride="8.3.2" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\..\Aspire\OrderProcessingSystem.ServiceDefaults\OrderProcessingSystem.ServiceDefaults.csproj" />
+    <ProjectReference Include="..\..\UserService\UserService.Api\UserService.Api.csproj" />
+  </ItemGroup>
 </Project>
