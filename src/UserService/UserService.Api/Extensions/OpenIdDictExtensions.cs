@@ -18,6 +18,7 @@ public static class OpenIdDictExtensions
                 options.SetAuthorizationEndpointUris("connect/authorize")
                        .SetIntrospectionEndpointUris("introspect")
                        .SetTokenEndpointUris("connect/token")
+                       .SetUserinfoEndpointUris("connect/userinfo")
                        .AllowAuthorizationCodeFlow()
                        .AllowRefreshTokenFlow()
                        .AllowPasswordFlow()

@@ -10,7 +10,11 @@ const Login: React.FC = () => {
 
 	const handleSubmit = async (e: React.FormEvent) => {
 		e.preventDefault();
-		const user = await login({ username, password });
+		const user = await login({
+			username,
+			password,
+			skipUserInfo: false,
+		});
 		if (user) {
 			onLogin(user);
 			redirect("/profile");
