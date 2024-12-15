@@ -7,7 +7,7 @@ var messaging = builder
 
 var userDb = builder
 	.AddPostgres("postgresql")
-	.WithPgAdmin()
+	.WithPgAdmin(x => x.WithLifetime(ContainerLifetime.Persistent))
 	.WithLifetime(ContainerLifetime.Persistent);
 
 var userDbMigrator = builder.AddProject<Projects.UserService_DbMigrator>("userservice-dbmigrator")

@@ -49,22 +49,15 @@ public class Worker(ILogger<Worker> logger, IServiceScopeFactory serviceScopeFac
 
 	private async Task RunMigrationAsync(UserDbContext dbContext, CancellationToken cancellationToken)
 	{
-		var pendingMigrationsExist = dbContext.Database.HasPendingModelChanges();
-		if (!pendingMigrationsExist)
+		var pendingMigrationsExist = dbContext.Database.GetPendingMigrations().Any();
+		if (pendingMigrationsExist)
+		{
+			// TODO: wrap in a transaction?
+			await dbContext.Database.MigrateAsync(cancellationToken);
+		}
+		else
 		{
 			logger.LogInformation("No pending migrations");
-			return;
 		}
-
-		var strategy = dbContext.Database.CreateExecutionStrategy();
-		await strategy.ExecuteAsync(async () =>
-		{
-			// Run migration in a transaction to avoid partial migration if it fails.
-			await using var transaction = await dbContext.Database.BeginTransactionAsync(cancellationToken);
-			await dbContext.Database.MigrateAsync(cancellationToken);
-			await transaction.CommitAsync(cancellationToken);
-		});
-
-		logger.LogInformation("Pending migrations applied");
 	}
 }

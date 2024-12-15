@@ -6,14 +6,16 @@
   </PropertyGroup>
   <ItemGroup>
     <PackageReference Include="MassTransit.RabbitMQ" />
+    <PackageReference Include="Microsoft.AspNetCore.OpenApi" />
     <PackageReference Include="Microsoft.Extensions.Caching.Memory" />
     <PackageReference Include="Npgsql.EntityFrameworkCore.PostgreSQL" />
     <PackageReference Include="OpenIddict.AspNetCore" />
+    <PackageReference Include="Scalar.AspNetCore" />
     <PackageReference Include="Swashbuckle.AspNetCore" />
     <PackageReference Include="OpenIddict.Quartz" />
     <PackageReference Include="Quartz.Extensions.Hosting" />
     <PackageReference Include="System.Linq.Async" />
-    <PackageReference Include="MassTransit" VersionOverride="8.3.2" />
+    <PackageReference Include="MassTransit" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\..\Aspire\OrderProcessingSystem.ServiceDefaults\OrderProcessingSystem.ServiceDefaults.csproj" />

@@ -6,7 +6,7 @@
   </PropertyGroup>
   <ItemGroup>
     <PackageReference Include="MassTransit.RabbitMQ" />
-    <PackageReference Include="MassTransit" VersionOverride="8.3.2" />
+    <PackageReference Include="MassTransit" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\..\Aspire\OrderProcessingSystem.ServiceDefaults\OrderProcessingSystem.ServiceDefaults.csproj" />
