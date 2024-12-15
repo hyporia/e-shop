@@ -55,32 +55,6 @@ public class DevelopmentAuthorizationDataSeeder(IServiceScopeFactory serviceScop
 		var manager = scope.ServiceProvider.GetRequiredService<IOpenIddictApplicationManager>();
 		var configuration = scope.ServiceProvider.GetRequiredService<IConfiguration>();
 		var port = configuration["ASPNETCORE_HTTPS_PORT"];
-		if (await manager.FindByClientIdAsync("swagger", cancellationToken) is null)
-		{
-			await manager.CreateAsync(
-				new OpenIddictApplicationDescriptor
-				{
-					ClientId = "swagger",
-					ConsentType = ConsentTypes.Explicit,
-					ClientType = ClientTypes.Public,
-					RedirectUris = { new Uri($"https://localhost:{port}/swagger/oauth2-redirect.html") },
-					Permissions =
-					{
-					Permissions.Endpoints.Authorization,
-					Permissions.Endpoints.Logout,
-					Permissions.Endpoints.Token,
-					Permissions.GrantTypes.AuthorizationCode,
-					Permissions.GrantTypes.RefreshToken,
-					Permissions.ResponseTypes.Code,
-					Permissions.Scopes.Email,
-					Permissions.Scopes.Profile,
-					Permissions.Scopes.Roles,
-					Permissions.Prefixes.Scope + "user_api"
-					},
-					Requirements = { Requirements.Features.ProofKeyForCodeExchange }
-				}, cancellationToken
-			);
-		}
 
 		if (await manager.FindByClientIdAsync("scalar", cancellationToken) is null)
 		{

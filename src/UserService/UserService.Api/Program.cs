@@ -24,7 +24,6 @@ builder.AddServiceDefaults();
 builder.Services.AddControllers();
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddOpenApi(OpenApiExtensions.Configure);
-builder.Services.AddSwagger(builder.Configuration);
 builder.Services.AddApplication();
 builder.Services.AddDatabase(builder.Configuration.GetConnectionString("postgresql")!);
 builder.Services.AddMassTransit();
@@ -68,13 +67,7 @@ app.MapDefaultEndpoints();
 // Configure the HTTP request pipeline.
 if (app.Environment.IsDevelopment())
 {
-	app.UseSwagger();
-	app.UseSwaggerUI(cfg =>
-	{
-		cfg.OAuthClientId("swagger");
-		cfg.OAuthUsePkce();
-		cfg.OAuthUsername("test");
-	});
+	app.MapOpenApi();
 	app.MapScalar();
 }
 
