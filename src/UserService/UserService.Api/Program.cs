@@ -19,8 +19,6 @@ var builder = WebApplication.CreateBuilder(args);
 
 builder.AddServiceDefaults();
 
-// Add services to the container.
-
 builder.Services.AddControllers();
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddOpenApi(OpenApiExtensions.Configure);
@@ -28,7 +26,6 @@ builder.Services.AddApplication();
 builder.Services.AddDatabase(builder.Configuration.GetConnectionString("postgresql")!);
 builder.Services.AddMassTransit();
 
-// Register the Identity services.
 builder.Services.AddIdentity<User, IdentityRole>()
 	.AddEntityFrameworkStores<UserDbContext>()
 	.AddDefaultTokenProviders();
@@ -47,7 +44,6 @@ builder.Services.AddHttpLogging(x =>
 	x.LoggingFields = HttpLoggingFields.RequestPath | HttpLoggingFields.RequestMethod | HttpLoggingFields.ResponseStatusCode;
 });
 
-// Add CORS services
 builder.Services.AddCors(options =>
 {
 	options.AddPolicy("AllowLocalhost3000", builder =>
@@ -64,7 +60,6 @@ var app = builder.Build();
 
 app.MapDefaultEndpoints();
 
-// Configure the HTTP request pipeline.
 if (app.Environment.IsDevelopment())
 {
 	app.MapOpenApi();
