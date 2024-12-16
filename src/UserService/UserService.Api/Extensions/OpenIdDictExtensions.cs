@@ -19,6 +19,7 @@ public static class OpenIdDictExtensions
                     .SetAuthorizationEndpointUris("connect/authorize")
                     .SetIntrospectionEndpointUris("introspect")
                     .SetTokenEndpointUris("connect/token")
+                    .SetLogoutEndpointUris("connect/logout")
                     //.SetUserinfoEndpointUris("connect/userinfo")
                     .AllowAuthorizationCodeFlow()
                     .AllowRefreshTokenFlow()
@@ -26,7 +27,8 @@ public static class OpenIdDictExtensions
                     .AddDevelopmentSigningCertificate()
                     .UseAspNetCore()
                     .EnableAuthorizationEndpointPassthrough()
-                    .EnableTokenEndpointPassthrough();
+                    .EnableTokenEndpointPassthrough()
+                    .EnableLogoutEndpointPassthrough();
 
                 if (isDevelopment)
                 {
