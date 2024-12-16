@@ -9,9 +9,7 @@ const authSettings: UserManagerSettings = {
     }/oauth/callback`,
     response_type: "token",
     loadUserInfo: false,
-    post_logout_redirect_uri: `http://localhost:${
-        import.meta.env.VITE_PORT
-    }/home`,
+    post_logout_redirect_uri: `http://localhost:${import.meta.env.VITE_PORT}`,
     metadata: {
         userinfo_endpoint: `${
             import.meta.env.VITE_USERSERVICE_API_URL

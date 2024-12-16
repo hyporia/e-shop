@@ -1,7 +1,6 @@
 import {
     SigninResourceOwnerCredentialsArgs,
     UserManager,
-    User as OidcUser,
 } from "oidc-client-ts";
 
 import { authConfig } from "../utils/authConfig";
