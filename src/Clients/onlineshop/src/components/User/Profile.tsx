@@ -1,25 +1,29 @@
 import { useEffect, useState } from "react";
-import { getUser } from "../../services/AuthService";
-import { User, UserProfile } from "oidc-client-ts";
-import { json } from "stream/consumers";
+import { getUser, User } from "../../services/authService";
 
 const Profile = (): JSX.Element => {
-	const [user, setUser] = useState<UserProfile | null>(null);
-	useEffect(() => {
-		const checkUser = async () => {
-			const user = await getUser();
-			setUser(user?.profile ?? null);
-		};
+    const [user, setUser] = useState<User | null>(null);
+    useEffect(() => {
+        const checkUser = async () => {
+            const user = await getUser();
+            setUser(user);
+        };
 
-		checkUser();
-	}, [user]);
+        checkUser();
+    }, []);
 
-	return (
-		<div>
-			<h1>Profile</h1>
-			<p>{user}</p>
-		</div>
-	);
+    return (
+        <div>
+            {user ? (
+                <div>
+                    <h1>Welcome {user.name}</h1>
+                    <p>Your user id is: {user.id}</p>
+                </div>
+            ) : (
+                <h1>Not logged in</h1>
+            )}
+        </div>
+    );
 };
 
 export default Profile;
