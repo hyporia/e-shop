@@ -64,7 +64,7 @@ public class DevelopmentAuthorizationDataSeeder(IServiceScopeFactory serviceScop
                     ClientId = "scalar",
                     ConsentType = ConsentTypes.Explicit,
                     ClientType = ClientTypes.Public,
-                    RedirectUris = { new Uri($"https://localhost:{port}/scalar/oauth2-redirect.html") },
+                    RedirectUris = { new Uri($"https://localhost:{port}/scalar/v1") },
                     Permissions =
                     {
                         Permissions.Endpoints.Authorization,

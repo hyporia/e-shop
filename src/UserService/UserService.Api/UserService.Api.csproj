@@ -11,10 +11,8 @@
     <PackageReference Include="Npgsql.EntityFrameworkCore.PostgreSQL" />
     <PackageReference Include="OpenIddict.AspNetCore" />
     <PackageReference Include="Scalar.AspNetCore" />
-    <PackageReference Include="Swashbuckle.AspNetCore" />
     <PackageReference Include="OpenIddict.Quartz" />
     <PackageReference Include="Quartz.Extensions.Hosting" />
-    <PackageReference Include="System.Linq.Async" />
     <PackageReference Include="MassTransit" />
   </ItemGroup>
   <ItemGroup>
