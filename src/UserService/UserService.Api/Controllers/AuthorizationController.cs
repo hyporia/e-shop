@@ -25,7 +25,7 @@ public class AuthorizationController(
     public async Task<IActionResult> Authorize()
     {
         // Retrieve the OpenIddict server request from the HTTP context.
-        var request = HttpContext.GetOpenIddictServerRequest();
+        var request = HttpContext.GetOpenIddictServerRequest()!;
 
         // Create a new identity with the provided authentication type.
         var identity = new ClaimsIdentity(
@@ -33,10 +33,8 @@ public class AuthorizationController(
             Claims.Name,
             Claims.Role);
 
-        // Add the client_id as the subject claim.
         identity.AddClaim(new Claim(Claims.Subject, request.ClientId!));
 
-        // Set the scopes requested by the client application.
         identity.SetScopes(request.GetScopes());
 
         // Set the resources based on the scopes.
@@ -46,10 +44,8 @@ public class AuthorizationController(
 
         identity.SetResources(resources);
 
-        // Allow all claims to be included in the access token.
         identity.SetDestinations(_ => [Destinations.AccessToken]);
 
-        // Return a sign-in result with the generated principal.
         return SignIn(
             principal: new ClaimsPrincipal(identity),
             authenticationScheme: OpenIddictServerAspNetCoreDefaults.AuthenticationScheme);
@@ -61,24 +57,18 @@ public class AuthorizationController(
         => await DoLogoutAsync(redirectUri);
 
     [HttpPost("~/connect/logout"), ValidateAntiForgeryToken]
-    public async Task<IActionResult> LogoutPost([FromForm] string? postLogoutRedirectUri)
-        => await DoLogoutAsync(postLogoutRedirectUri);
+    public async Task<IActionResult> LogoutPost([FromForm(Name = "post_logout_redirect_uri")] string? redirectUri)
+        => await DoLogoutAsync(redirectUri);
 
     private async Task<SignOutResult> DoLogoutAsync(string? redirectUri)
     {
+        await signInManager.SignOutAsync();
+
         if (string.IsNullOrEmpty(redirectUri) || !Uri.IsWellFormedUriString(redirectUri, UriKind.Absolute))
         {
             redirectUri = "/";
         }
 
-        // Ask ASP.NET Core Identity to delete the local and external cookies created
-        // when the user agent is redirected from the external identity provider
-        // after a successful authentication flow (e.g Google or Facebook).
-        await signInManager.SignOutAsync();
-
-        // Returning a SignOutResult will ask OpenIddict to redirect the user agent
-        // to the post_logout_redirect_uri specified by the client application or to
-        // the RedirectUri specified in the authentication properties if none was set.
         return SignOut(
             authenticationSchemes: OpenIddictServerAspNetCoreDefaults.AuthenticationScheme,
             properties: new() { RedirectUri = redirectUri });
@@ -87,47 +77,45 @@ public class AuthorizationController(
     [HttpPost("~/connect/token")]
     [IgnoreAntiforgeryToken]
     [Produces(MediaTypeNames.Application.Json)]
-    public async Task<IActionResult> Exchange(CancellationToken cancellationToken)
+    public async Task<IActionResult> Exchange(CancellationToken cancellationToken = default)
     {
-        // Retrieve the OpenIddict server request.
         var request = HttpContext.GetOpenIddictServerRequest();
 
         return request?.GrantType switch
         {
             GrantTypes.AuthorizationCode => await ExchangeAuthorizationCodeAsync(request, cancellationToken),
-            GrantTypes.Password => await ExchangePasswordAsync(request),
+            GrantTypes.Password => await ExchangePasswordAsync(request, cancellationToken),
             _ => ForbidWithError("The specified grant type is not supported.")
         };
     }
 
-
-
-    private async Task<IActionResult> ExchangePasswordAsync(OpenIddictRequest request)
+    private async Task<IActionResult> ExchangePasswordAsync(OpenIddictRequest request, CancellationToken cancellationToken)
     {
-        // Validate the user credentials.
         var user = await userManager.FindByNameAsync(request.Username!);
         if (user == null || string.IsNullOrWhiteSpace(request.Password))
         {
             return ForbidWithError("The username/password combination is invalid.");
         }
 
+        var applicationObj = await applicationManager.FindByClientIdAsync(request.ClientId!, cancellationToken);
+        if (applicationObj is not OpenIddictApplicationDescriptor application)
+        {
+            return ForbidWithError("Invalid client.");
+        }
+
         var signInResult = await signInManager.CheckPasswordSignInAsync(
-            user,
-            request.Password,
-            lockoutOnFailure: true);
+            user, request.Password, lockoutOnFailure: true);
 
         if (!signInResult.Succeeded)
         {
             return ForbidWithError("Invalid credentials.");
         }
 
-        // Create the claims-based identity.
         var identity = new ClaimsIdentity(
             TokenValidationParameters.DefaultAuthenticationType,
             Claims.Name,
             Claims.Role);
 
-        // Add user claims.
         identity.SetClaim(Claims.Subject, user.Id)
                 .SetClaim(Claims.Email, user.Email)
                 .SetClaim(Claims.Name, user.UserName);
@@ -135,14 +123,11 @@ public class AuthorizationController(
         var roles = await userManager.GetRolesAsync(user);
         identity.SetClaims(Claims.Role, [.. roles]);
 
-        // Set scopes based on user roles.
         var scopes = roles.SelectMany(GetScopesByRole).Distinct();
         identity.SetScopes(scopes);
 
-        // Set claim destinations.
-        identity.SetDestinations(GetDestinations);
+        identity.SetDestinations(claim => GetDestinations(claim, application));
 
-        // Return a sign-in result with the generated principal.
         return SignIn(
             principal: new ClaimsPrincipal(identity),
             authenticationScheme: OpenIddictServerAspNetCoreDefaults.AuthenticationScheme);
@@ -156,23 +141,20 @@ public class AuthorizationController(
         }
 
         // Validate the client application.
-        var application = await applicationManager.FindByClientIdAsync(request.ClientId!, cancellationToken);
-        if (application == null)
+        var applicationObj = await applicationManager.FindByClientIdAsync(request.ClientId!, cancellationToken);
+        if (applicationObj is not OpenIddictApplicationDescriptor application)
         {
             return ForbidWithError("Invalid client.");
         }
 
-        // Create the claims-based identity.
         var identity = new ClaimsIdentity(
             TokenValidationParameters.DefaultAuthenticationType,
             Claims.Name,
             Claims.Role);
 
-        // Add application claims.
         identity.SetClaim(Claims.Subject, await applicationManager.GetClientIdAsync(application, cancellationToken))
                 .SetClaim(Claims.Name, await applicationManager.GetDisplayNameAsync(application, cancellationToken));
 
-        // Set scopes and resources.
         identity.SetScopes(request.GetScopes());
 
         var resources = await scopeManager
@@ -181,10 +163,8 @@ public class AuthorizationController(
 
         identity.SetResources(resources);
 
-        // Set claim destinations.
-        identity.SetDestinations(GetDestinations);
+        identity.SetDestinations(claim => GetDestinations(claim));
 
-        // Return a sign-in result with the generated principal.
         return SignIn(
             principal: new ClaimsPrincipal(identity),
             authenticationScheme: OpenIddictServerAspNetCoreDefaults.AuthenticationScheme);
@@ -201,24 +181,36 @@ public class AuthorizationController(
         return Forbid(properties, OpenIddictServerAspNetCoreDefaults.AuthenticationScheme);
     }
 
-    private static IEnumerable<string> GetDestinations(Claim claim) => claim.Type switch
+    private static IEnumerable<string> GetDestinations(Claim claim, OpenIddictApplicationDescriptor? application = null)
     {
-        Claims.Name or Claims.PreferredUsername => GetNameDestinations(claim),
-        Claims.Email or Claims.Role => [Destinations.AccessToken],
-        "AspNet.Identity.SecurityStamp" => [], // Exclude sensitive claims.
-        _ => [Destinations.AccessToken]
-    };
+        if (ShouldGoToAccessToken(claim))
+        {
+            yield return Destinations.AccessToken;
+        }
 
-    private static IEnumerable<string> GetNameDestinations(Claim claim)
-    {
-        yield return Destinations.AccessToken;
-
-        if (claim.Subject!.HasScope(Scopes.Profile))
+        if (ShouldGoToIdentityToken(claim, application))
         {
             yield return Destinations.IdentityToken;
         }
     }
 
+    private static bool ShouldGoToAccessToken(Claim claim) =>
+        claim.Type switch
+        {
+            "AspNet.Identity.SecurityStamp" => false, // Exclude sensitive claims.
+            _ => true
+        };
+
+    private static bool ShouldGoToIdentityToken(Claim claim, OpenIddictApplicationDescriptor? application)
+        => claim.Type switch
+        {
+            // Only include the user's name in the identity token if the client application is allowed to access it.
+            // TODO: and the applications actually requests it
+            Claims.Name or Claims.PreferredUsername => application?.Permissions?.Contains(Scopes.Profile) ?? false,
+            _ => false
+        };
+
+    // TODO: move to DB?
     private static IEnumerable<string> GetScopesByRole(string role) => role switch
     {
         "admin" => ["user_api"],
