@@ -9,7 +9,7 @@
     <PackageReference Include="MassTransit" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\..\Aspire\OrderProcessingSystem.ServiceDefaults\OrderProcessingSystem.ServiceDefaults.csproj" />
+	  <ProjectReference Include="..\..\Aspire\EShop.ServiceDefaults\EShop.ServiceDefaults.csproj" />
     <ProjectReference Include="..\..\UserService\UserService.Api\UserService.Api.csproj" />
   </ItemGroup>
 </Project>

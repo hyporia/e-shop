@@ -13,7 +13,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\Aspire\OrderProcessingSystem.ServiceDefaults\OrderProcessingSystem.ServiceDefaults.csproj" />
-    <ProjectReference Include="..\UserService\UserService.Data\UserService.Data.csproj" />
+	<ProjectReference Include="..\..\Aspire\EShop.ServiceDefaults\EShop.ServiceDefaults.csproj" />
+	<ProjectReference Include="..\UserService.Data\UserService.Data.csproj" />
   </ItemGroup>
 </Project>

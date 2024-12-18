@@ -16,7 +16,7 @@
     <PackageReference Include="MassTransit" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\..\Aspire\OrderProcessingSystem.ServiceDefaults\OrderProcessingSystem.ServiceDefaults.csproj" />
+    <ProjectReference Include="..\..\Aspire\EShop.ServiceDefaults\EShop.ServiceDefaults.csproj" />
     <ProjectReference Include="..\..\Shared\Shared.Infra.CQRS\Shared.Infra.CQRS.csproj" />
     <ProjectReference Include="..\UserService.Data\UserService.Data.csproj" />
     <ProjectReference Include="..\UserService.Events\UserService.Events.csproj" />
