@@ -1,32 +1,31 @@
-﻿using Microsoft.AspNetCore.Authorization;
-using Microsoft.AspNetCore.Identity;
+﻿using MediatR;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using UserService.Application.InternalCommands;
-using UserService.Domain;
+using static UserService.Application.InternalCommands.RegisterUser;
 
 namespace UserService.Api.Controllers;
 
 [ApiController]
-public class AccountController(UserManager<User> userManager) : ControllerBase
+public class AccountController(IMediator mediator) : ControllerBase
 {
     // POST: /Account/Register
     [HttpPost("/account/register")]
     [AllowAnonymous]
-    public async Task<IActionResult> Register([FromBody] RegisterUser request)
+    public async Task<IActionResult> Register([FromBody] RegisterUser request, CancellationToken cancellationToken = default)
     {
-        var user = await userManager.FindByNameAsync(request.Email);
-        if (user != null)
+        var result = await mediator.Send(request, cancellationToken);
+
+        if (result.IsSuccess)
         {
-            return StatusCode(StatusCodes.Status409Conflict);
+            return Created();
         }
 
-        user = new() { UserName = request.Email, Email = request.Email };
-        var result = await userManager.CreateAsync(user, request.Password);
-        if (result.Succeeded)
+        return result.Error.Code switch
         {
-            return StatusCode(StatusCodes.Status201Created);
-        }
-
-        return BadRequest(result.Errors);
+            RegisterUserErrorCode.EmailInUse => Conflict(),
+            RegisterUserErrorCode.IdentityError => BadRequest(result.Error.IdentityErrors),
+            _ => BadRequest()
+        };
     }
 }
