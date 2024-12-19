@@ -21,11 +21,20 @@ public class AccountController(IMediator mediator) : ControllerBase
             return Created();
         }
 
-        return result.Error.Code switch
+        if (result.Error.Count == 1 && result.Error.ContainsKey(RegisterUserErrorCode.DuplicateEmail))
         {
-            RegisterUserErrorCode.EmailInUse => Conflict(),
-            RegisterUserErrorCode.IdentityError => BadRequest(result.Error.IdentityErrors),
-            _ => BadRequest()
-        };
+            return Problem(
+                title: "The email is already taken.",
+                statusCode: StatusCodes.Status409Conflict,
+                detail: "The email is already taken."
+            );
+        }
+
+        return Problem(
+            title: "One or more errors occurred during registration.",
+            statusCode: StatusCodes.Status400BadRequest,
+            detail: "One or more errors occurred during registration.",
+            extensions: result.Error.ToDictionary(kvp => kvp.Key.ToString(), kvp => (object?)kvp.Value)
+        );
     }
 }

@@ -26,7 +26,10 @@ builder.Services.AddApplication();
 builder.Services.AddDatabase(builder.Configuration.GetConnectionString("postgresql")!);
 builder.Services.AddMassTransit();
 
-builder.Services.AddIdentity<User, IdentityRole>()
+builder.Services.AddIdentity<User, IdentityRole>(x =>
+    {
+        x.User.RequireUniqueEmail = true;
+    })
     .AddEntityFrameworkStores<UserDbContext>()
     .AddDefaultTokenProviders();
 

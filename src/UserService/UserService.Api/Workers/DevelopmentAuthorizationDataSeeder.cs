@@ -123,8 +123,18 @@ public class DevelopmentAuthorizationDataSeeder(IServiceScopeFactory serviceScop
 
         var user = new User { Email = "admin@localhost", UserName = "admin" };
 
-        await manager.CreateAsync(user, "123");
-        await manager.AddToRolesAsync(user, ["admin", "user"]);
+        HandleIdentityResult(await manager.CreateAsync(user, "admin"));
+        HandleIdentityResult(await manager.AddToRolesAsync(user, ["admin", "user"]));
+    }
+
+
+    private static void HandleIdentityResult(IdentityResult result)
+    {
+        if (!result.Succeeded)
+        {
+            var errorsString = string.Join(", ", result.Errors.Select(e => $"{e.Code}: {e.Description}"));
+            throw new InvalidOperationException(errorsString);
+        }
     }
 
     public Task StopAsync(CancellationToken cancellationToken) => Task.CompletedTask;
