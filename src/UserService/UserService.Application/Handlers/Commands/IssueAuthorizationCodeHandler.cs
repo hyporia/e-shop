@@ -19,18 +19,15 @@ internal class IssueAuthorizationCodeHandler(IOpenIddictScopeManager scopeManage
             Claims.Name,
             Claims.Role);
 
-        identity.AddClaim(new Claim(Claims.Subject, request.ClientId!));
-
-        identity.SetScopes(request.GetScopes());
-
         // Set the resources based on the scopes.
         var resources = await scopeManager
             .ListResourcesAsync(identity.GetScopes(), cancellationToken)
             .ToListAsync(cancellationToken);
 
-        identity.SetResources(resources);
-
-        identity.SetDestinations(_ => [Destinations.AccessToken]);
+        identity.SetClaim(Claims.Subject, request.ClientId!)
+            .SetScopes(request.GetScopes())
+            .SetResources(resources)
+            .SetDestinations(_ => [Destinations.AccessToken]);
 
         return new(identity);
     }

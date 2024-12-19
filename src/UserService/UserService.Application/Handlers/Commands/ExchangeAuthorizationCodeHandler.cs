@@ -21,7 +21,7 @@ internal class ExchangeAuthorizationCodeHandler(IOpenIddictApplicationManager ap
         var applicationObj = await applicationManager.FindByClientIdAsync(request.ClientId!, cancellationToken);
         if (applicationObj is not OpenIddictEntityFrameworkCoreApplication application)
         {
-            return Result.Failure<ClaimsPrincipal, string>("Invalid client");
+            return "Invalid client";
         }
 
         var identity = new ClaimsIdentity(
@@ -29,20 +29,17 @@ internal class ExchangeAuthorizationCodeHandler(IOpenIddictApplicationManager ap
             Claims.Name,
             Claims.Role);
 
-        identity.SetClaim(Claims.Subject, application.ClientId)
-                .SetClaim(Claims.Name, application.DisplayName);
-
-        identity.SetScopes(request.GetScopes());
-
         var resources = await scopeManager
             .ListResourcesAsync(identity.GetScopes(), cancellationToken)
             .ToListAsync(cancellationToken);
 
-        identity.SetResources(resources);
+        identity.SetClaim(Claims.Subject, application.ClientId)
+                .SetClaim(Claims.Name, application.DisplayName)
+                .SetScopes(request.GetScopes())
+                .SetResources(resources)
+                .SetDestinations(GetDestinations);
 
-        identity.SetDestinations(GetDestinations);
-
-        return Result.Success<ClaimsPrincipal, string>(new(identity));
+        return new ClaimsPrincipal(identity);
     }
 
     private static IEnumerable<string> GetDestinations(Claim claim)

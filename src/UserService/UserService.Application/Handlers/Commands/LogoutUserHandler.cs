@@ -13,9 +13,9 @@ internal class LogoutUserHandler(SignInManager<User> signInManager) : IRequestHa
 
         if (string.IsNullOrEmpty(request.RedirectUri) || !Uri.IsWellFormedUriString(request.RedirectUri, UriKind.Absolute))
         {
-            return new("/");
+            return "/";
         }
 
-        return new(request.RedirectUri);
+        return request.RedirectUri;
     }
 }

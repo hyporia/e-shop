@@ -23,25 +23,25 @@ internal class ExchangePasswordHandler(UserManager<User> userManager, SignInMana
 
         if (user == null || string.IsNullOrWhiteSpace(request.Password))
         {
-            return Result.Failure<ClaimsPrincipal, string>("The username/password combination is invalid.");
+            return "The username/password combination is invalid.";
         }
 
         var applicationObj = await applicationManager.FindByClientIdAsync(request.ClientId!, cancellationToken);
         if (applicationObj is not OpenIddictEntityFrameworkCoreApplication application)
         {
-            return Result.Failure<ClaimsPrincipal, string>("Invalid client.");
+            return "Invalid client.";
         }
 
         var signInResult = await signInManager.CheckPasswordSignInAsync(user, request.Password, lockoutOnFailure: true);
 
         if (!signInResult.Succeeded)
         {
-            return Result.Failure<ClaimsPrincipal, string>("Invalid credentials.");
+            return "Invalid credentials.";
         }
 
         var identity = await CreateIdentity(user, application);
 
-        return Result.Success<ClaimsPrincipal, string>(new(identity));
+        return new ClaimsPrincipal(identity);
     }
 
     private async Task<ClaimsIdentity> CreateIdentity(User user, OpenIddictEntityFrameworkCoreApplication application)
@@ -51,17 +51,16 @@ internal class ExchangePasswordHandler(UserManager<User> userManager, SignInMana
                    Claims.Name,
                    Claims.Role);
 
+        var roles = await userManager.GetRolesAsync(user);
+        var scopes = roles.SelectMany(GetScopesByRole).Distinct();
+
         identity.SetClaim(Claims.Subject, user.Id)
                 .SetClaim(Claims.Email, user.Email)
-                .SetClaim(Claims.Name, user.UserName);
+                .SetClaim(Claims.Name, user.UserName)
+                .SetClaims(Claims.Role, [.. roles])
+                .SetScopes(scopes)
+                .SetDestinations(claim => GetDestinations(claim, application));
 
-        var roles = await userManager.GetRolesAsync(user);
-        identity.SetClaims(Claims.Role, [.. roles]);
-
-        var scopes = roles.SelectMany(GetScopesByRole).Distinct();
-        identity.SetScopes(scopes);
-
-        identity.SetDestinations(claim => GetDestinations(claim, application));
         return identity;
     }
 
