@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { getUser, User } from "../../services/authService";
+import { getUser, User } from "../../services/AuthService";
 
 const Profile = (): JSX.Element => {
     const [user, setUser] = useState<User | null>(null);

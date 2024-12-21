@@ -1,7 +1,7 @@
 import React, { useState } from "react";
-import { useAuth } from "../../utils/authContext";
+import { useAuth } from "../../contexts/authContext";
 import { redirect } from "react-router-dom";
-import { login } from "../../services/authService";
+import { login } from "../../services/AuthService";
 
 const Login: React.FC = () => {
     const [username, setUsername] = useState("");

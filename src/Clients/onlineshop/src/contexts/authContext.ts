@@ -1,5 +1,5 @@
 import { createContext, useContext } from "react";
-import { User } from "../services/authService";
+import { User } from "../services/AuthService";
 
 // Define the types for authentication context
 interface AuthContextType {

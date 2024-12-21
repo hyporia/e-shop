@@ -1,33 +1,40 @@
-﻿using Microsoft.AspNetCore.Authorization;
-using Microsoft.AspNetCore.Identity;
+﻿using MediatR;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-using OpenIddict.Abstractions;
 using UserService.Application.InternalCommands;
-using UserService.Domain;
+using static UserService.Application.InternalCommands.RegisterUser;
 
 namespace UserService.Api.Controllers;
 
 [ApiController]
-public class AccountController(UserManager<User> userManager, IOpenIddictScopeManager scopeManager) : ControllerBase
+public class AccountController(IMediator mediator) : ControllerBase
 {
-	// POST: /Account/Register
-	[HttpPost("/account/register")]
-	[AllowAnonymous]
-	public async Task<IActionResult> Register([FromBody] RegisterUser request)
-	{
-		var user = await userManager.FindByNameAsync(request.Email);
-		if (user != null)
-		{
-			return StatusCode(StatusCodes.Status409Conflict);
-		}
+    // POST: /Account/Register
+    [HttpPost("/account/register")]
+    [AllowAnonymous]
+    public async Task<IActionResult> Register([FromBody] RegisterUser request, CancellationToken cancellationToken = default)
+    {
+        var result = await mediator.Send(request, cancellationToken);
 
-		user = new() { UserName = request.Email, Email = request.Email };
-		var result = await userManager.CreateAsync(user, request.Password);
-		if (result.Succeeded)
-		{
-			return Ok();
-		}
+        if (result.IsSuccess)
+        {
+            return Created();
+        }
 
-		return BadRequest(result.Errors);
-	}
+        if (result.Error.Count == 1 && result.Error.ContainsKey(RegisterUserErrorCode.DuplicateEmail))
+        {
+            return Problem(
+                title: "The email is already taken.",
+                statusCode: StatusCodes.Status409Conflict,
+                detail: "The email is already taken."
+            );
+        }
+
+        return Problem(
+            title: "One or more errors occurred during registration.",
+            statusCode: StatusCodes.Status400BadRequest,
+            detail: "One or more errors occurred during registration.",
+            extensions: result.Error.ToDictionary(kvp => kvp.Key.ToString(), kvp => (object?)kvp.Value)
+        );
+    }
 }

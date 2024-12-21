@@ -19,7 +19,7 @@
     <ProjectReference Include="..\..\OrderService\OrderService.Api\OrderService.Api.csproj" />
     <ProjectReference Include="..\..\ProductService\ProductService.Api\ProductService.Api.csproj" />
     <ProjectReference Include="..\..\ShippingService\ShippingService.Api\ShippingService.Api.csproj" />
-    <ProjectReference Include="..\..\UserService.DbMigrator\UserService.DbMigrator.csproj" />
     <ProjectReference Include="..\..\UserService\UserService.Api\UserService.Api.csproj" />
+    <ProjectReference Include="..\..\UserService\UserService.DbMigrator\UserService.DbMigrator.csproj" />
   </ItemGroup>
 </Project>

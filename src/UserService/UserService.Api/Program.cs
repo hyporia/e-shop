@@ -26,9 +26,12 @@ builder.Services.AddApplication();
 builder.Services.AddDatabase(builder.Configuration.GetConnectionString("postgresql")!);
 builder.Services.AddMassTransit();
 
-builder.Services.AddIdentity<User, IdentityRole>()
-	.AddEntityFrameworkStores<UserDbContext>()
-	.AddDefaultTokenProviders();
+builder.Services.AddIdentity<User, IdentityRole>(x =>
+    {
+        x.User.RequireUniqueEmail = true;
+    })
+    .AddEntityFrameworkStores<UserDbContext>()
+    .AddDefaultTokenProviders();
 
 builder.Services.Configure<IdentityOptions>(builder.Configuration.GetSection(nameof(IdentityOptions)));
 
@@ -36,24 +39,25 @@ builder.Services.AddOpenIddict(builder.Environment.IsDevelopment());
 
 if (builder.Environment.IsDevelopment())
 {
-	builder.Services.AddHostedService<DevelopmentAuthorizationDataSeeder>();
+    builder.Services.AddHostedService<DevelopmentAuthorizationDataSeeder>();
 }
 
 builder.Services.AddHttpLogging(x =>
 {
-	x.LoggingFields = HttpLoggingFields.RequestPath | HttpLoggingFields.RequestMethod | HttpLoggingFields.ResponseStatusCode;
+    x.LoggingFields = HttpLoggingFields.RequestPath | HttpLoggingFields.RequestMethod | HttpLoggingFields.ResponseStatusCode;
 });
 
 builder.Services.AddCors(options =>
 {
-	options.AddPolicy("AllowLocalhost3000", builder =>
-	{
-		builder.WithOrigins("http://localhost:3000")
-			   .AllowAnyHeader()
-			   .AllowAnyMethod();
-	});
+    options.AddPolicy("AllowLocalhost3000", builder =>
+    {
+        builder.WithOrigins("http://localhost:3000")
+               .AllowAnyHeader()
+               .AllowAnyMethod();
+    });
 });
 
+builder.Services.AddAuthentication(OpenIddictValidationAspNetCoreDefaults.AuthenticationScheme);
 builder.Services.AddAuthorization();
 builder.Services.AddHttpContextAccessor();
 var app = builder.Build();
@@ -62,8 +66,8 @@ app.MapDefaultEndpoints();
 
 if (app.Environment.IsDevelopment())
 {
-	app.MapOpenApi();
-	app.MapScalar();
+    app.MapOpenApi();
+    app.MapScalar();
 }
 
 app.UseMiddleware<NotFoundMiddleware>();
