@@ -2,12 +2,12 @@
 import { Route, Routes } from "react-router-dom";
 import Login from "./components/user/Login";
 import Register from "./components/user/Register";
-import NavBar from "./components/NavBar";
+import NavBar from "./components/layout/NavBar";
 import Home from "./components/home/Home";
 import ProtectedRoutes from "./components/shared/ProtectedRoute";
 import Profile from "./components/user/Profile";
 import { AuthProvider } from "./components/authentication/authProvider";
-import Logout from "./components/User/Logout";
+import Logout from "./components/user/Logout";
 
 const App = (): JSX.Element => {
     return (

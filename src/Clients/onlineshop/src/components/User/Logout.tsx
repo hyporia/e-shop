@@ -1,6 +1,6 @@
 import React, { useEffect } from "react";
-import { logout } from "../../services/authService";
-import { useAuth } from "../../utils/authContext";
+import { logout } from "../../services/AuthService";
+import { useAuth } from "../../contexts/authContext";
 
 const Logout: React.FC = () => {
     const { onLogout } = useAuth();

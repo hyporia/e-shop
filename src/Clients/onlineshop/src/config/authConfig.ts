@@ -10,6 +10,7 @@ const authSettings: UserManagerSettings = {
     response_type: "token",
     loadUserInfo: false,
     post_logout_redirect_uri: `http://localhost:${import.meta.env.VITE_PORT}`,
+    automaticSilentRenew: true,
     metadata: {
         userinfo_endpoint: `${
             import.meta.env.VITE_USERSERVICE_API_URL

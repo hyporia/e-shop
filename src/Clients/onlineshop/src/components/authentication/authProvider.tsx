@@ -1,8 +1,8 @@
 import { useEffect, useState } from "react";
-import { AuthContext } from "../../utils/authContext";
+import { AuthContext } from "../../contexts/authContext";
 
 import { ReactNode } from "react";
-import { getUser, User } from "../../services/authService";
+import { getUser, User } from "../../services/AuthService";
 
 export const AuthProvider = ({
     children,
