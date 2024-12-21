@@ -11,11 +11,11 @@ using static OpenIddict.Abstractions.OpenIddictConstants;
 
 namespace UserService.Application.Handlers.Commands;
 
-internal class ExchangePasswordHandler(UserManager<User> userManager, SignInManager<User> signInManager,
+internal class ExchangeUserCredentialsHandler(UserManager<User> userManager, SignInManager<User> signInManager,
     IOpenIddictApplicationManager applicationManager)
-    : IRequestHandler<ExchangePassword, Result<ClaimsPrincipal, string>>
+    : IRequestHandler<ExchangeUserCredentials, Result<ClaimsPrincipal, string>>
 {
-    public async Task<Result<ClaimsPrincipal, string>> Handle(ExchangePassword command, CancellationToken cancellationToken)
+    public async Task<Result<ClaimsPrincipal, string>> Handle(ExchangeUserCredentials command, CancellationToken cancellationToken)
     {
         var request = command.OpenIddictRequest;
 

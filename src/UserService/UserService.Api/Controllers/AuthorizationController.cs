@@ -49,7 +49,7 @@ public class AuthorizationController(IMediator mediator) : ControllerBase
         var result = request?.GrantType switch
         {
             GrantTypes.AuthorizationCode => await mediator.Send(new ExchangeAuthorizationCode(request), cancellationToken),
-            GrantTypes.Password => await mediator.Send(new ExchangePassword(request), cancellationToken),
+            GrantTypes.Password => await mediator.Send(new ExchangeUserCredentials(request), cancellationToken),
             _ => Result.Failure<ClaimsPrincipal, string>("The specified grant type is not supported.")
         };
 
