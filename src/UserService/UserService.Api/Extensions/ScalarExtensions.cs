@@ -7,7 +7,7 @@ public static class ScalarExtensions
     {
         app.MapScalarApiReference(cfg =>
         {
-            cfg.Servers = [];
+            // cfg.Servers = [];
             cfg.WithOAuth2Authentication(authCfg =>
             {
                 authCfg.ClientId = "scalar";

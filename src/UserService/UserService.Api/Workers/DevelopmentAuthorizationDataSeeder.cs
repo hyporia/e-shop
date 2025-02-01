@@ -68,7 +68,7 @@ public class DevelopmentAuthorizationDataSeeder(IServiceScopeFactory serviceScop
                     Permissions =
                     {
                         Permissions.Endpoints.Authorization,
-                        Permissions.Endpoints.Logout,
+                        Permissions.Endpoints.EndSession,
                         Permissions.Endpoints.Token,
                         Permissions.GrantTypes.AuthorizationCode,
                         Permissions.GrantTypes.RefreshToken,
@@ -97,7 +97,7 @@ public class DevelopmentAuthorizationDataSeeder(IServiceScopeFactory serviceScop
                     Permissions =
                     {
                         Permissions.Endpoints.Authorization,
-                        Permissions.Endpoints.Logout,
+                        Permissions.Endpoints.EndSession,
                         Permissions.Endpoints.Token,
                         Permissions.GrantTypes.Password,
                         Permissions.GrantTypes.RefreshToken,

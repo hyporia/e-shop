@@ -8,6 +8,7 @@ const authSettings: UserManagerSettings = {
         import.meta.env.VITE_PORT
     }/oauth/callback`,
     response_type: "token",
+    scope: "openid profile offline_access",
     loadUserInfo: false,
     post_logout_redirect_uri: `http://localhost:${import.meta.env.VITE_PORT}`,
     automaticSilentRenew: true,

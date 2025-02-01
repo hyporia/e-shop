@@ -44,14 +44,27 @@ public class AuthorizationController(IMediator mediator) : ControllerBase
     [Produces(MediaTypeNames.Application.Json)]
     public async Task<IActionResult> Exchange(CancellationToken cancellationToken = default)
     {
-        var request = HttpContext.GetOpenIddictServerRequest();
+        var request = HttpContext.GetOpenIddictServerRequest()!;
 
-        var result = request?.GrantType switch
+        Result<ClaimsPrincipal, string> result;
+        AuthenticateResult? authenticateResult = null;
+        switch (request?.GrantType)
         {
-            GrantTypes.AuthorizationCode => await mediator.Send(new ExchangeAuthorizationCode(request), cancellationToken),
-            GrantTypes.Password => await mediator.Send(new ExchangeUserCredentials(request), cancellationToken),
-            _ => Result.Failure<ClaimsPrincipal, string>("The specified grant type is not supported.")
-        };
+            case GrantTypes.AuthorizationCode:
+                authenticateResult = await HttpContext.AuthenticateAsync(OpenIddictServerAspNetCoreDefaults.AuthenticationScheme);
+                result = await mediator.Send(new ExchangeAuthorizationCode(request, authenticateResult), cancellationToken);
+                break;
+            case GrantTypes.Password:
+                result = await mediator.Send(new ExchangeUserCredentials(request), cancellationToken);
+                break;
+            case GrantTypes.RefreshToken:                
+                authenticateResult = await HttpContext.AuthenticateAsync(OpenIddictServerAspNetCoreDefaults.AuthenticationScheme);
+                result = await mediator.Send(new ExchangeRefreshToken(request, authenticateResult), cancellationToken);
+                break;
+            default:
+                result = Result.Failure<ClaimsPrincipal, string>("The specified grant type is not supported.");
+                break;
+        }
 
         return result.IsSuccess
             ? SignIn(result.Value, OpenIddictServerAspNetCoreDefaults.AuthenticationScheme)
