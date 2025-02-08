@@ -1,13 +1,12 @@
-using MassTransit;
 using MediatR;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.HttpLogging;
 using Microsoft.AspNetCore.Identity;
-using Microsoft.EntityFrameworkCore;
 using OpenIddict.Validation.AspNetCore;
 using OrderProcessingSystem.ServiceDefaults;
 using UserService.Api.Extensions;
 using UserService.Api.Middleware;
+using UserService.Api.OpenAPI;
 using UserService.Api.Workers;
 using UserService.Application.Extensions;
 using UserService.Contracts.Queries.User;
@@ -21,7 +20,11 @@ builder.AddServiceDefaults();
 
 builder.Services.AddControllers();
 builder.Services.AddEndpointsApiExplorer();
-builder.Services.AddOpenApi(OpenApiExtensions.Configure);
+builder.Services.AddOpenApi(options =>
+{
+    options.AddDocumentTransformer<AuthorizationTransformer>();
+    options.AddDocumentTransformer<ServersTransformer>();
+});
 builder.Services.AddApplication();
 builder.Services.AddDatabase(builder.Configuration.GetConnectionString("postgresql")!);
 builder.Services.AddMassTransit();
@@ -44,16 +47,17 @@ if (builder.Environment.IsDevelopment())
 
 builder.Services.AddHttpLogging(x =>
 {
-    x.LoggingFields = HttpLoggingFields.RequestPath | HttpLoggingFields.RequestMethod | HttpLoggingFields.ResponseStatusCode;
+    x.LoggingFields = HttpLoggingFields.RequestPath | HttpLoggingFields.RequestMethod |
+                      HttpLoggingFields.ResponseStatusCode;
 });
 
 builder.Services.AddCors(options =>
 {
-    options.AddPolicy("AllowLocalhost3000", builder =>
+    options.AddPolicy("AllowLocalhost3000", policyBuilder =>
     {
-        builder.WithOrigins("http://localhost:3000")
-               .AllowAnyHeader()
-               .AllowAnyMethod();
+        policyBuilder.WithOrigins("http://localhost:3000")
+            .AllowAnyHeader()
+            .AllowAnyMethod();
     });
 });
 
@@ -83,8 +87,10 @@ app.UseAuthorization();
 
 app.MapControllers();
 
-app.MapGet("/user", [Authorize(AuthenticationSchemes = OpenIddictValidationAspNetCoreDefaults.AuthenticationScheme)]
-(IMediator mediator, CancellationToken cancellationToken) => mediator.Send(new GetUsers(), cancellationToken)
+app.MapGet("/user",
+    [Authorize(AuthenticationSchemes = OpenIddictValidationAspNetCoreDefaults.AuthenticationScheme)]
+    (IMediator mediator,
+        CancellationToken cancellationToken) => mediator.Send(new GetUsers(), cancellationToken)
 );
 
 app.Run();

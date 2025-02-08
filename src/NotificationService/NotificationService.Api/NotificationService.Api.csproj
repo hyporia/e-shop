@@ -7,6 +7,7 @@
   <ItemGroup>
     <PackageReference Include="MassTransit.RabbitMQ" />
     <PackageReference Include="MassTransit" />
+    <PackageReference Include="Scalar.AspNetCore" />
   </ItemGroup>
   <ItemGroup>
 	  <ProjectReference Include="..\..\Aspire\EShop.ServiceDefaults\EShop.ServiceDefaults.csproj" />

@@ -364,3 +364,6 @@ FodyWeavers.xsd
 
 # Visual Studio temporary files
 .vs/
+
+# Rider
+.idea/

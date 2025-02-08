@@ -1,4 +1,5 @@
 using UserService.Data;
+using static OpenIddict.Abstractions.OpenIddictConstants;
 
 namespace UserService.Api.Extensions;
 
@@ -11,7 +12,7 @@ public static class OpenIdDictExtensions
             .AddCore(options =>
             {
                 options.UseEntityFrameworkCore()
-                       .UseDbContext<UserDbContext>();
+                    .UseDbContext<UserDbContext>();
             })
             .AddServer(options =>
             {
@@ -19,7 +20,7 @@ public static class OpenIdDictExtensions
                     .SetAuthorizationEndpointUris("connect/authorize")
                     .SetIntrospectionEndpointUris("introspect")
                     .SetTokenEndpointUris("connect/token")
-                    .SetLogoutEndpointUris("connect/logout")
+                    .SetEndSessionEndpointUris("connect/logout")
                     //.SetUserinfoEndpointUris("connect/userinfo")
                     .AllowAuthorizationCodeFlow()
                     .AllowRefreshTokenFlow()
@@ -28,12 +29,14 @@ public static class OpenIdDictExtensions
                     .UseAspNetCore()
                     .EnableAuthorizationEndpointPassthrough()
                     .EnableTokenEndpointPassthrough()
-                    .EnableLogoutEndpointPassthrough();
+                    .EnableEndSessionEndpointPassthrough();
+
+                options.RegisterScopes(Scopes.OpenId, Scopes.Profile, Scopes.Roles, Scopes.Email, Scopes.Phone);
 
                 if (isDevelopment)
                 {
                     options.AddEphemeralEncryptionKey()
-                           .DisableAccessTokenEncryption();
+                        .DisableAccessTokenEncryption();
                 }
             })
             .AddValidation(options =>
