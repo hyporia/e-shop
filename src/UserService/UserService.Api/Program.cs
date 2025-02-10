@@ -4,6 +4,7 @@ using Microsoft.AspNetCore.HttpLogging;
 using Microsoft.AspNetCore.Identity;
 using OpenIddict.Validation.AspNetCore;
 using OrderProcessingSystem.ServiceDefaults;
+using Shared.Api.OpenAPI;
 using UserService.Api.Extensions;
 using UserService.Api.Middleware;
 using UserService.Api.OpenAPI;

@@ -6,5 +6,10 @@
     </PropertyGroup>
     <ItemGroup>
         <ProjectReference Include="..\..\Aspire\EShop.ServiceDefaults\EShop.ServiceDefaults.csproj"/>
+        <ProjectReference Include="..\..\Shared\Shared.Api\Shared.Api.csproj"/>
+        <ProjectReference Include="..\ProductService.Data\ProductService.Data.csproj"/>
+    </ItemGroup>
+    <ItemGroup>
+        <PackageReference Include="Scalar.AspNetCore"/>
     </ItemGroup>
 </Project>

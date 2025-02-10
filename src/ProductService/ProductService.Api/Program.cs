@@ -1,20 +1,31 @@
 using OrderProcessingSystem.ServiceDefaults;
+using ProductService.Data;
+using Scalar.AspNetCore;
+using Shared.Api.OpenAPI;
 
 var builder = WebApplication.CreateBuilder(args);
 
 builder.AddServiceDefaults();
 
 // Add services to the container.
-
+builder.Services.AddOpenApi(options =>
+{
+    options.AddDocumentTransformer<ServersTransformer>();
+});
 builder.Services.AddControllers();
-// Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 builder.Services.AddEndpointsApiExplorer();
+
+builder.Services.AddData(builder.Configuration.GetConnectionString("postgresql")!);
 
 var app = builder.Build();
 
-app.MapDefaultEndpoints();
+if (app.Environment.IsDevelopment())
+{
+    app.MapOpenApi();
+    app.MapScalarApiReference();
+}
 
-// Configure the HTTP request pipeline.
+app.MapDefaultEndpoints();
 
 app.UseHttpsRedirection();
 
