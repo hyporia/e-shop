@@ -7,22 +7,28 @@ var messaging = builder
 
 var db = builder
     .AddPostgres("postgresql")
-    .WithPgAdmin(x => x.WithLifetime(ContainerLifetime.Persistent))
+    .WithPgAdmin(x =>
+    {
+        x.WithLifetime(ContainerLifetime.Persistent);
+    })
     .WithLifetime(ContainerLifetime.Persistent);
 
+var productDb = db.AddDatabase("productDb");
+var userDb = db.AddDatabase("userDb");
+
 var userDbMigrator = builder.AddProject<Projects.UserService_DbMigrator>("userservice-dbmigrator")
-    .WithReference(db)
-    .WaitFor(db);
+    .WithReference(userDb)
+    .WaitFor(userDb);
 
 var userServiceApi = builder.AddProject<Projects.UserService_Api>("userservice-api")
     .WithReference(messaging)
-    .WithReference(db)
+    .WithReference(userDb)
     .WaitFor(messaging)
     .WaitForCompletion(userDbMigrator);
 
 var productDbMigrator = builder.AddProject<Projects.ProductService_Migrator>("productservice-dbmigrator")
-    .WithReference(db)
-    .WaitFor(db);
+    .WithReference(productDb)
+    .WaitFor(productDb);
 
 // builder.AddProject<Projects.NotificationService_Api>("notificationservice")
 //     .WithReference(messaging);

@@ -1,4 +1,4 @@
-using OrderProcessingSystem.ServiceDefaults;
+using EShop.ServiceDefaults;
 using ProductService.Data;
 using Scalar.AspNetCore;
 using Shared.Api.OpenAPI;
@@ -15,7 +15,7 @@ builder.Services.AddOpenApi(options =>
 builder.Services.AddControllers();
 builder.Services.AddEndpointsApiExplorer();
 
-builder.Services.AddData(builder.Configuration.GetConnectionString("postgresql")!);
+builder.Services.AddData(builder.Configuration.GetConnectionString("productDb")!);
 
 var app = builder.Build();
 

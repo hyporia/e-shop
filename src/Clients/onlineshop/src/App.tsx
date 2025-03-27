@@ -1,18 +1,21 @@
-// App.tsx
+import { lazy, Suspense, useCallback } from "react";
 import { Route, Routes } from "react-router-dom";
-import Login from "./components/user/Login";
-import Register from "./components/user/Register";
-import NavBar from "./components/layout/NavBar";
-import Home from "./components/home/Home";
-import ProtectedRoutes from "./components/shared/ProtectedRoute";
-import Profile from "./components/user/Profile";
 import { AuthProvider } from "./components/authentication/authProvider";
-import Logout from "./components/user/Logout";
+import NavBar from "./components/layout/NavBar";
+import ProtectedRoutes from "./components/shared/ProtectedRoute";
+import LoadingSpinner from "./components/shared/LoadingSpinner";
+import ErrorBoundary from "./components/shared/ErrorBoundary";
+
+// Memoized lazy-loaded components
+const Home = lazy(() => import("./components/home/Home"));
+const Login = lazy(() => import("./components/user/Login"));
+const Register = lazy(() => import("./components/user/Register"));
+const Profile = lazy(() => import("./components/user/Profile"));
+const Logout = lazy(() => import("./components/user/Logout"));
 
 const App = (): JSX.Element => {
-    return (
-        <AuthProvider>
-            <NavBar />
+    const renderRoutes = useCallback(
+        () => (
             <Routes>
                 <Route path="/" element={<Home />} />
                 <Route element={<ProtectedRoutes />}>
@@ -23,6 +26,18 @@ const App = (): JSX.Element => {
                 <Route path="/logout" element={<Logout />} />
                 <Route path="/register" element={<Register />} />
             </Routes>
+        ),
+        []
+    );
+
+    return (
+        <AuthProvider>
+            <NavBar />
+            <ErrorBoundary>
+                <Suspense fallback={<LoadingSpinner />}>
+                    {renderRoutes()}
+                </Suspense>
+            </ErrorBoundary>
         </AuthProvider>
     );
 };

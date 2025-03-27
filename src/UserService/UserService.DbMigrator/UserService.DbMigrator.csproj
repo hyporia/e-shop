@@ -14,6 +14,7 @@
 
   <ItemGroup>
 	<ProjectReference Include="..\..\Aspire\EShop.ServiceDefaults\EShop.ServiceDefaults.csproj" />
+	<ProjectReference Include="..\..\Shared\Shared.Data.Migrator\Shared.Data.Migrator.csproj" />
 	<ProjectReference Include="..\UserService.Data\UserService.Data.csproj" />
   </ItemGroup>
 </Project>

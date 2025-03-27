@@ -1,9 +1,9 @@
+using EShop.ServiceDefaults;
 using MediatR;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.HttpLogging;
 using Microsoft.AspNetCore.Identity;
 using OpenIddict.Validation.AspNetCore;
-using OrderProcessingSystem.ServiceDefaults;
 using Shared.Api.OpenAPI;
 using UserService.Api.Extensions;
 using UserService.Api.Middleware;
@@ -27,7 +27,7 @@ builder.Services.AddOpenApi(options =>
     options.AddDocumentTransformer<ServersTransformer>();
 });
 builder.Services.AddApplication();
-builder.Services.AddDatabase(builder.Configuration.GetConnectionString("postgresql")!);
+builder.Services.AddData(builder.Configuration.GetConnectionString("userDb")!);
 builder.Services.AddMassTransit();
 
 builder.Services.AddIdentity<User, IdentityRole>(x =>
@@ -90,7 +90,7 @@ app.MapControllers();
 
 app.MapGet("/user",
     [Authorize(AuthenticationSchemes = OpenIddictValidationAspNetCoreDefaults.AuthenticationScheme)]
-    (IMediator mediator,
+(IMediator mediator,
         CancellationToken cancellationToken) => mediator.Send(new GetUsers(), cancellationToken)
 );
 
