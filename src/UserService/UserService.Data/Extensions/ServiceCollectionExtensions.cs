@@ -7,9 +7,16 @@ using UserService.Domain;
 namespace UserService.Data.Extensions;
 public static class ServiceCollectionExtensions
 {
-	public static IServiceCollection AddDatabase(this IServiceCollection services, string connectionString) =>
-		services
-			.AddDbContext<UserDbContext>(x => x.UseNpgsql(connectionString))
-			.AddTransient<IQueries<User>, Queries<User>>()
-			;
+    public static IServiceCollection AddData(this IServiceCollection services, string connectionString)
+    {
+        ArgumentException.ThrowIfNullOrWhiteSpace(connectionString);
+
+        return services
+            .AddDbContext<UserDbContext>(options =>
+            {
+                options.UseNpgsql(connectionString);
+            })
+            .AddTransient<IQueries<User>, Queries<User>>()
+            ;
+    }
 }

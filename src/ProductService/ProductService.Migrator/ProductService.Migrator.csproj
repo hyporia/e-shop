@@ -1,0 +1,19 @@
+<Project Sdk="Microsoft.NET.Sdk.Worker">
+
+    <PropertyGroup>
+        <TargetFramework>net9.0</TargetFramework>
+        <Nullable>enable</Nullable>
+        <ImplicitUsings>enable</ImplicitUsings>
+        <UserSecretsId>dotnet-ProductService.DbMigrator-88b1a60a-edb5-45f9-ae34-be254200f343</UserSecretsId>
+    </PropertyGroup>
+
+    <ItemGroup>
+        <PackageReference Include="Microsoft.Extensions.Hosting"/>
+    </ItemGroup>
+
+    <ItemGroup>
+        <ProjectReference Include="..\..\Aspire\EShop.ServiceDefaults\EShop.ServiceDefaults.csproj"/>
+        <ProjectReference Include="..\..\Shared\Shared.Data.Migrator\Shared.Data.Migrator.csproj"/>
+        <ProjectReference Include="..\ProductService.Data\ProductService.Data.csproj"/>
+    </ItemGroup>
+</Project>

@@ -1,4 +1,4 @@
-using OrderProcessingSystem.ServiceDefaults;
+using EShop.ServiceDefaults;
 
 var builder = WebApplication.CreateBuilder(args);
 

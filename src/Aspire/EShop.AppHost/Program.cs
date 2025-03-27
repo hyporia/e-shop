@@ -5,10 +5,16 @@ var messaging = builder
     .WithManagementPlugin()
     .WithLifetime(ContainerLifetime.Persistent);
 
-var userDb = builder
+var db = builder
     .AddPostgres("postgresql")
-    .WithPgAdmin(x => x.WithLifetime(ContainerLifetime.Persistent))
+    .WithPgAdmin(x =>
+    {
+        x.WithLifetime(ContainerLifetime.Persistent);
+    })
     .WithLifetime(ContainerLifetime.Persistent);
+
+var productDb = db.AddDatabase("productDb");
+var userDb = db.AddDatabase("userDb");
 
 var userDbMigrator = builder.AddProject<Projects.UserService_DbMigrator>("userservice-dbmigrator")
     .WithReference(userDb)
@@ -20,6 +26,10 @@ var userServiceApi = builder.AddProject<Projects.UserService_Api>("userservice-a
     .WaitFor(messaging)
     .WaitForCompletion(userDbMigrator);
 
+var productDbMigrator = builder.AddProject<Projects.ProductService_Migrator>("productservice-dbmigrator")
+    .WithReference(productDb)
+    .WaitFor(productDb);
+
 // builder.AddProject<Projects.NotificationService_Api>("notificationservice")
 //     .WithReference(messaging);
 
@@ -29,10 +39,10 @@ var userServiceApi = builder.AddProject<Projects.UserService_Api>("userservice-a
 
 // builder.AddProject<Projects.ShippingService_Api>("shippingservice-api");
 
-builder.AddNpmApp("react", "../../Clients/onlineshop", scriptName: "dev")
+builder.AddNpmApp("react", "../../Clients/onlineshop", "dev")
     .WithReference(userServiceApi)
     .WithEnvironment("BROWSER", "none") // Disable opening browser on npm start
-    .WithHttpEndpoint(port: 3000, env: "VITE_PORT", isProxied: false)
+    .WithHttpEndpoint(3000, env: "VITE_PORT", isProxied: false)
     .WithEnvironment("VITE_USERSERVICE_API_URL", userServiceApi.GetEndpoint("https"))
     .WithExternalHttpEndpoints()
     .PublishAsDockerFile();

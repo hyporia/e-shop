@@ -1,9 +1,10 @@
 using Microsoft.AspNetCore.OpenApi;
+using Microsoft.Extensions.Configuration;
 using Microsoft.OpenApi.Models;
 
-namespace UserService.Api.OpenAPI;
+namespace Shared.Api.OpenAPI;
 
-internal class ServersTransformer(IConfiguration configuration) : IOpenApiDocumentTransformer
+public class ServersTransformer(IConfiguration configuration) : IOpenApiDocumentTransformer
 {
     public Task TransformAsync(OpenApiDocument document, OpenApiDocumentTransformerContext context,
         CancellationToken cancellationToken)
