@@ -7,17 +7,18 @@
     </PropertyGroup>
 
     <ItemGroup>
-        <ProjectReference Include="..\ProductService.Domain\ProductService.Domain.csproj"/>
+        <ProjectReference Include="..\ProductService.Application\ProductService.Application.csproj" />
+        <ProjectReference Include="..\ProductService.Domain\ProductService.Domain.csproj" />
     </ItemGroup>
 
     <ItemGroup>
-        <PackageReference Include="Microsoft.EntityFrameworkCore"/>
-        <PackageReference Include="Npgsql.EntityFrameworkCore.PostgreSQL"/>
-        <PackageReference Include="Microsoft.EntityFrameworkCore.Design"/>
+        <PackageReference Include="Microsoft.EntityFrameworkCore" />
+        <PackageReference Include="Npgsql.EntityFrameworkCore.PostgreSQL" />
+        <PackageReference Include="Microsoft.EntityFrameworkCore.Design" />
     </ItemGroup>
 
     <ItemGroup>
-        <InternalsVisibleTo Include="ProductService.Migrator"/>
+        <InternalsVisibleTo Include="ProductService.Migrator" />
     </ItemGroup>
 
 </Project>

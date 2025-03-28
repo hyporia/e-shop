@@ -1,5 +1,8 @@
 using EShop.ServiceDefaults;
-using ProductService.Data;
+using MediatR;
+using ProductService.Application.Extensions;
+using ProductService.Contracts.Queries.Product;
+using ProductService.Data.Extensions;
 using Scalar.AspNetCore;
 using Shared.Api.OpenAPI;
 
@@ -14,6 +17,7 @@ builder.Services.AddOpenApi(options =>
 });
 builder.Services.AddControllers();
 builder.Services.AddEndpointsApiExplorer();
+builder.Services.AddApplication();
 
 builder.Services.AddData(builder.Configuration.GetConnectionString("productDb")!);
 
@@ -31,6 +35,10 @@ app.UseHttpsRedirection();
 
 app.UseAuthorization();
 
-app.MapControllers();
+app.MapGet("/products", async ([AsParameters] GetAllProducts query, IMediator mediator, CancellationToken cancellationToken) =>
+{
+    var result = await mediator.Send(query, cancellationToken);
+    return Results.Ok(result);
+});
 
 app.Run();
