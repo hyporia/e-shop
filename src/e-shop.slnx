@@ -1,0 +1,49 @@
+<Solution>
+  <Folder Name="/Solution Items/">
+    <File Path="../.editorconfig" />
+    <File Path="Directory.Packages.props" />
+  </Folder>
+  <Folder Name="/src/" />
+  <Folder Name="/src/Aspire/" Id="52bf7fb6-37ff-5100-efd1-124eff302675">
+    <Project Path="Aspire/EShop.AppHost/EShop.AppHost.csproj" />
+    <Project Path="Aspire/EShop.ServiceDefaults/EShop.ServiceDefaults.csproj" />
+  </Folder>
+  <Folder Name="/src/Clients/" Id="00b920e4-100f-d869-d8b1-04b3a2ed45da">
+    <Project Path="Clients/onlineshop/onlineshop.esproj">
+      <Build />
+      <Deploy />
+    </Project>
+  </Folder>
+  <Folder Name="/src/NotificationService/" Id="9ed238a0-938c-9a3f-ddea-9079e74dec51">
+    <Project Path="NotificationService/NotificationService.Api/NotificationService.Api.csproj" />
+  </Folder>
+  <Folder Name="/src/OrderService/" Id="d5064fc8-1f49-54b6-e1c8-b23a6140528a">
+    <Project Path="OrderService/OrderService.Api/OrderService.Api.csproj" />
+  </Folder>
+  <Folder Name="/src/ProductService/" Id="f34e43fa-627a-8966-7bcb-0dbe3d5440b1">
+    <Project Path="ProductService/ProductService.Api/ProductService.Api.csproj" />
+    <Project Path="ProductService/ProductService.Application/ProductService.Application.csproj" Id="10b3cf91-b32e-4c60-b66b-9dd1b7567a30" />
+    <Project Path="ProductService/ProductService.Contracts/ProductService.Contracts.csproj" />
+    <Project Path="ProductService/ProductService.Data/ProductService.Data.csproj" />
+    <Project Path="ProductService/ProductService.Domain/ProductService.Domain.csproj" />
+    <Project Path="ProductService/ProductService.Migrator/ProductService.Migrator.csproj" />
+  </Folder>
+  <Folder Name="/src/Shared/" Id="c8e42992-5e42-0c2b-dbfe-aa848d06431c">
+    <Project Path="Shared/Shared.Api/Shared.Api.csproj" />
+    <Project Path="Shared/Shared.Data.Migrator/Shared.Data.Migrator.csproj" />
+    <Project Path="Shared/Shared.Infra.CQRS/Shared.Infra.CQRS.csproj" />
+  </Folder>
+  <Folder Name="/src/ShippingService/" Id="7b4daf42-993b-ff1f-e85f-f2e193b763ec">
+    <Project Path="ShippingService/ShippingService.Api/ShippingService.Api.csproj" />
+  </Folder>
+  <Folder Name="/src/UserService/" Id="cb753486-031c-08a7-c788-4c8cbc49ded1">
+    <Project Path="UserService/UserService.Api/UserService.Api.csproj" />
+    <Project Path="UserService/UserService.Application/UserService.Application.csproj" />
+    <Project Path="UserService/UserService.Contracts/UserService.Contracts.csproj" />
+    <Project Path="UserService/UserService.Data/UserService.Data.csproj" />
+    <Project Path="UserService/UserService.DbMigrator/UserService.DbMigrator.csproj" />
+    <Project Path="UserService/UserService.Domain/UserService.Domain.csproj" />
+    <Project Path="UserService/UserService.Events/UserService.Events.csproj" />
+  </Folder>
+  <Folder Name="/tests/" />
+</Solution>

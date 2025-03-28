@@ -90,8 +90,8 @@ app.MapControllers();
 
 app.MapGet("/user",
     [Authorize(AuthenticationSchemes = OpenIddictValidationAspNetCoreDefaults.AuthenticationScheme)]
-(IMediator mediator,
-        CancellationToken cancellationToken) => mediator.Send(new GetUsers(), cancellationToken)
+([AsParameters] GetUsers query, IMediator mediator,
+        CancellationToken cancellationToken) => mediator.Send(query, cancellationToken)
 );
 
 app.Run();

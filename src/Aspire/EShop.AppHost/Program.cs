@@ -33,8 +33,9 @@ var productDbMigrator = builder.AddProject<Projects.ProductService_Migrator>("pr
 // builder.AddProject<Projects.NotificationService_Api>("notificationservice")
 //     .WithReference(messaging);
 
-// builder.AddProject<Projects.ProductService_Api>("productservice-api");
-
+var productServiceApi = builder.AddProject<Projects.ProductService_Api>("productservice-api")
+    .WithReference(productDb)
+    .WaitForCompletion(productDbMigrator);
 // builder.AddProject<Projects.OrderService_Api>("orderservice-api");
 
 // builder.AddProject<Projects.ShippingService_Api>("shippingservice-api");

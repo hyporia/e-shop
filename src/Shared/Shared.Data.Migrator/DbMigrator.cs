@@ -31,6 +31,12 @@ public class DbMigrator<TContext>(
             var dbContext = scope.ServiceProvider.GetRequiredService<TContext>();
 
             await RunMigrationAsync(dbContext, cancellationToken);
+
+            var dataSeeder = scope.ServiceProvider.GetService<IDataSeeder<TContext>>();
+            if (dataSeeder is not null && dataSeeder.ShouldSeed(dbContext))
+            {
+                await SeedDataAsync(dbContext, dataSeeder, cancellationToken);
+            }
         }
         catch (Exception ex)
         {
@@ -47,6 +53,19 @@ public class DbMigrator<TContext>(
         {
             // Run migration in a transaction to avoid partial migration if it fails.
             await dbContext.Database.MigrateAsync(cancellationToken);
+        });
+    }
+
+    private static async Task SeedDataAsync(TContext dbContext, IDataSeeder<TContext> dataSeeder, CancellationToken cancellationToken)
+    {
+        var strategy = dbContext.Database.CreateExecutionStrategy();
+        await strategy.ExecuteAsync(async () =>
+        {
+            // Seed the database
+            await using var transaction = await dbContext.Database.BeginTransactionAsync(cancellationToken);
+            await dbContext.AddRangeAsync(dataSeeder.Entities, cancellationToken);
+            await dbContext.SaveChangesAsync(cancellationToken);
+            await transaction.CommitAsync(cancellationToken);
         });
     }
 }
