@@ -1,12 +1,10 @@
 import React, { useState } from "react";
-import { postAccountRegister, client } from "../../clients/authService";
+import { postAccountRegister } from "../../clients/UserService";
 
 const Register: React.FC = () => {
     const [username, setUsername] = useState("");
     const [password, setPassword] = useState("");
     const [confirmPassword, setConfirmPassword] = useState("");
-
-    client.setConfig({ baseURL: import.meta.env.VITE_USERSERVICE_API_URL });
 
     const handleSubmit = async (e: React.FormEvent) => {
         e.preventDefault();
@@ -18,6 +16,7 @@ const Register: React.FC = () => {
         var response = await postAccountRegister({
             body: {
                 email: username,
+                username: username,
                 password: password,
             },
         });

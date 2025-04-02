@@ -23,7 +23,7 @@ public class DbMigrator<TContext>(
 
     private async Task CreateOrMigrateDatabaseAsync(CancellationToken cancellationToken)
     {
-        using var activity = s_activitySource.StartActivity("Migrating database", ActivityKind.Client);
+        using var activity = s_activitySource.StartActivity("Database", ActivityKind.Client);
 
         try
         {
@@ -48,6 +48,7 @@ public class DbMigrator<TContext>(
 
     private static async Task RunMigrationAsync(TContext dbContext, CancellationToken cancellationToken)
     {
+        using var activity = s_activitySource.StartActivity("Applying migrations", ActivityKind.Client);
         var strategy = dbContext.Database.CreateExecutionStrategy();
         await strategy.ExecuteAsync(async () =>
         {
@@ -58,6 +59,7 @@ public class DbMigrator<TContext>(
 
     private static async Task SeedDataAsync(TContext dbContext, IDataSeeder<TContext> dataSeeder, CancellationToken cancellationToken)
     {
+        using var activity = s_activitySource.StartActivity("Seeding data", ActivityKind.Client);
         var strategy = dbContext.Database.CreateExecutionStrategy();
         await strategy.ExecuteAsync(async () =>
         {

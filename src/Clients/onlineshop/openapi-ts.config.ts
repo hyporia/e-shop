@@ -1,11 +1,11 @@
 import { defineConfig } from "@hey-api/openapi-ts";
 
 export default defineConfig({
-    client: "@hey-api/client-axios",
-    input: "src/clients/authService/specs/swagger.json",
+    input: "./openapi/v1.json",
     output: {
-        path: "src/clients/authService",
+        path: "src/clients/ProductService",
         format: "prettier",
         lint: "eslint",
     },
+    plugins: ["@hey-api/client-axios"],
 });

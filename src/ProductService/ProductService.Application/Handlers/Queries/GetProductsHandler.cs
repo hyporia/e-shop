@@ -4,9 +4,9 @@ using ProductService.Contracts.Queries.Product;
 using ProductService.Domain;
 
 namespace ProductService.Application.Handlers.Queries;
-internal class GetProductsHandler(IQueries<Product> productQueries) : IRequestHandler<GetAllProducts, GetAllProductsResponse>
+internal class GetProductsHandler(IQueries<Product> productQueries) : IRequestHandler<GetProducts, GetProductsResponse>
 {
-    public async Task<GetAllProductsResponse> Handle(GetAllProducts request, CancellationToken cancellationToken)
+    public async Task<GetProductsResponse> Handle(GetProducts request, CancellationToken cancellationToken)
     {
         var products = await productQueries.GetAllAsync(cancellationToken);
         return new()

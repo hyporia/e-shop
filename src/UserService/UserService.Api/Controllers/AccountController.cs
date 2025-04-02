@@ -30,6 +30,15 @@ public class AccountController(IMediator mediator) : ControllerBase
             );
         }
 
+        if (result.Error.Count == 1 && result.Error.ContainsKey(RegisterUserErrorCode.DuplicateUserName))
+        {
+            return Problem(
+                title: "The username is already taken.",
+                statusCode: StatusCodes.Status409Conflict,
+                detail: "The username is already taken."
+            );
+        }
+
         return Problem(
             title: "One or more errors occurred during registration.",
             statusCode: StatusCodes.Status400BadRequest,

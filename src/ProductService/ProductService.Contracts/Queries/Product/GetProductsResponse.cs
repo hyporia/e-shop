@@ -1,6 +1,6 @@
 namespace ProductService.Contracts.Queries.Product;
 
-public class GetAllProductsResponse
+public class GetProductsResponse
 {
     public List<ProductResponseItem> Products { get; set; } = [];
 }
