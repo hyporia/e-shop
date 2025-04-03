@@ -10,6 +10,7 @@ var db = builder
     .WithPgAdmin(x =>
     {
         x.WithLifetime(ContainerLifetime.Persistent);
+        x.WithImageTag("9.1.0");
     })
     .WithLifetime(ContainerLifetime.Persistent);
 
@@ -45,6 +46,7 @@ builder.AddNpmApp("react", "../../Clients/onlineshop", "dev")
     .WithEnvironment("BROWSER", "none") // Disable opening browser on npm start
     .WithHttpEndpoint(3000, env: "VITE_PORT", isProxied: false)
     .WithEnvironment("VITE_USERSERVICE_API_URL", userServiceApi.GetEndpoint("https"))
+    .WithEnvironment("VITE_PRODUCTSERVICE_API_URL", productServiceApi.GetEndpoint("https"))
     .WithExternalHttpEndpoints()
     .PublishAsDockerFile();
 

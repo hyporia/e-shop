@@ -20,6 +20,15 @@ builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddApplication();
 
 builder.Services.AddData(builder.Configuration.GetConnectionString("productDb")!);
+builder.Services.AddCors(options =>
+{
+    options.AddPolicy("AllowLocalhost3000", policyBuilder =>
+    {
+        policyBuilder.WithOrigins("http://localhost:3000")
+            .AllowAnyHeader()
+            .AllowAnyMethod();
+    });
+});
 
 var app = builder.Build();
 
@@ -33,12 +42,15 @@ app.MapDefaultEndpoints();
 
 app.UseHttpsRedirection();
 
+app.UseCors("AllowLocalhost3000");
+
 app.UseAuthorization();
 
-app.MapGet("/products", async ([AsParameters] GetAllProducts query, IMediator mediator, CancellationToken cancellationToken) =>
+app.MapGet("/products", async ([AsParameters] GetProducts query, IMediator mediator, CancellationToken cancellationToken) =>
 {
     var result = await mediator.Send(query, cancellationToken);
     return Results.Ok(result);
-});
+})
+    .Produces<GetProductsResponse>();
 
 app.Run();

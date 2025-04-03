@@ -1,19 +1,15 @@
 import { createContext, useContext } from "react";
 import { User } from "../services/AuthService";
 
-// Define the types for authentication context
-interface AuthContextType {
+export interface AuthContextType {
     isAuthenticated: boolean;
     onLogin: (user: User) => void;
     onLogout: () => void;
+    login: (username: string, password: string) => Promise<void>;
 }
 
-// Create authentication context
-export const AuthContext = createContext<AuthContextType | undefined>(
-    undefined
-);
+export const AuthContext = createContext<AuthContextType | null>(null);
 
-// Custom hook to use authentication context
 export const useAuth = () => {
     const context = useContext(AuthContext);
     if (!context) {

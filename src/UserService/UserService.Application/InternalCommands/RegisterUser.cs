@@ -44,6 +44,11 @@ public class RegisterUser(string email, string username, string password) :
         DuplicateEmail,
 
         /// <summary>
+        /// The username is already taken.
+        /// </summary>
+        DuplicateUserName,
+
+        /// <summary>
         /// The username is invalid.
         /// </summary>
         InvalidUserName,

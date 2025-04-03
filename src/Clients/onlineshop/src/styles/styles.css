@@ -1,0 +1,15 @@
+@import "./variables.css";
+@import "./base.css";
+@import "./utilities.css";
+
+/* Global styles */
+:root {
+    color-scheme: light dark;
+}
+
+body {
+    background-color: var(--background);
+    color: var(--text);
+}
+
+/* Component styles will be imported here */
