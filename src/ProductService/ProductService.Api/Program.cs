@@ -1,6 +1,5 @@
 using EShop.ServiceDefaults;
 using FastEndpoints;
-using ProductService.Application.Extensions;
 using ProductService.Data.Extensions;
 using Scalar.AspNetCore;
 using Shared.Api.OpenAPI;
@@ -16,7 +15,6 @@ builder.Services.AddOpenApi(options =>
 });
 builder.Services.AddControllers();
 builder.Services.AddEndpointsApiExplorer();
-builder.Services.AddApplication();
 builder.Services.AddFastEndpoints();
 
 builder.Services.AddData(builder.Configuration.GetConnectionString("productDb")!);
