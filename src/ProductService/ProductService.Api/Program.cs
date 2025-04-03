@@ -1,7 +1,6 @@
 using EShop.ServiceDefaults;
-using MediatR;
+using FastEndpoints;
 using ProductService.Application.Extensions;
-using ProductService.Contracts.Queries.Product;
 using ProductService.Data.Extensions;
 using Scalar.AspNetCore;
 using Shared.Api.OpenAPI;
@@ -18,6 +17,7 @@ builder.Services.AddOpenApi(options =>
 builder.Services.AddControllers();
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddApplication();
+builder.Services.AddFastEndpoints();
 
 builder.Services.AddData(builder.Configuration.GetConnectionString("productDb")!);
 builder.Services.AddCors(options =>
@@ -46,11 +46,6 @@ app.UseCors("AllowLocalhost3000");
 
 app.UseAuthorization();
 
-app.MapGet("/products", async ([AsParameters] GetProducts query, IMediator mediator, CancellationToken cancellationToken) =>
-{
-    var result = await mediator.Send(query, cancellationToken);
-    return Results.Ok(result);
-})
-    .Produces<GetProductsResponse>();
+app.UseFastEndpoints();
 
 app.Run();

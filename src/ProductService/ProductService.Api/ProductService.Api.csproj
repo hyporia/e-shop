@@ -6,6 +6,7 @@
     </PropertyGroup>
     <ItemGroup>
       <PackageReference Include="Scalar.AspNetCore" />
+	  <PackageReference Include="FastEndpoints" />
     </ItemGroup>
     <ItemGroup>
         <ProjectReference Include="..\..\Aspire\EShop.ServiceDefaults\EShop.ServiceDefaults.csproj" />

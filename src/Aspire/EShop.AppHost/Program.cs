@@ -3,6 +3,7 @@ var builder = DistributedApplication.CreateBuilder(args);
 var messaging = builder
     .AddRabbitMQ("rabbitmq")
     .WithManagementPlugin()
+    .WithContainerName("aspire-e-shop-rabbitmq")
     .WithLifetime(ContainerLifetime.Persistent);
 
 var db = builder
@@ -11,7 +12,9 @@ var db = builder
     {
         x.WithLifetime(ContainerLifetime.Persistent);
         x.WithImageTag("9.1.0");
+        x.WithContainerName("aspire-e-shop-pgadmin");
     })
+    .WithContainerName("aspire-e-shop-postgres")
     .WithLifetime(ContainerLifetime.Persistent);
 
 var productDb = db.AddDatabase("productDb");
