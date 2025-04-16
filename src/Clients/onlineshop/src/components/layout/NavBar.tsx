@@ -69,20 +69,6 @@ const NavBar = (): JSX.Element => {
                                 Login
                             </NavLink>
                         </li>
-                        <li>
-                            <NavLink
-                                to="/register"
-                                className={({ isActive }) =>
-                                    `text-base ${
-                                        isActive
-                                            ? "text-white font-bold"
-                                            : "text-gray-300 font-normal"
-                                    }`
-                                }
-                            >
-                                Register
-                            </NavLink>
-                        </li>
                     </>
                 )}
             </ul>

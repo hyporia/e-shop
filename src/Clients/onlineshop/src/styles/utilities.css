@@ -261,3 +261,7 @@
     -webkit-box-orient: vertical;
     overflow: hidden;
 }
+
+.list-none {
+    list-style-type: none;
+}
