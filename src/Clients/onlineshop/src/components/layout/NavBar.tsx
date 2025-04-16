@@ -21,20 +21,6 @@ const NavBar = (): JSX.Element => {
                         Home
                     </NavLink>
                 </li>
-                <li>
-                    <NavLink
-                        to="/products"
-                        className={({ isActive }) =>
-                            `text-base ${
-                                isActive
-                                    ? "text-white font-bold"
-                                    : "text-gray-300 font-normal"
-                            }`
-                        }
-                    >
-                        Products
-                    </NavLink>
-                </li>
                 {isAuthenticated && (
                     <>
                         <li>

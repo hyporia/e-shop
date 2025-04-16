@@ -40,9 +40,6 @@ const Products = () => {
 
     return (
         <div className="container p-lg">
-            <h1 className="text-3xl font-bold text-center mb-xl">
-                Our Products
-            </h1>
             {loading ? (
                 <p className="text-center">Loading products...</p>
             ) : (
