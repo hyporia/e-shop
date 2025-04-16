@@ -3,8 +3,11 @@
         <TargetFramework>net9.0</TargetFramework>
         <Nullable>enable</Nullable>
         <ImplicitUsings>enable</ImplicitUsings>
+        <GenerateDocumentationFile>true</GenerateDocumentationFile>
+        <NoWarn>CS1591</NoWarn>
     </PropertyGroup>
     <ItemGroup>
+      <PackageReference Include="FastEndpoints.Swagger" />
       <PackageReference Include="Scalar.AspNetCore" />
 	  <PackageReference Include="FastEndpoints" />
     </ItemGroup>

@@ -1,10 +1,11 @@
 import { useEffect, useState } from "react";
-import { getProducts } from "../../clients/ProductService";
-import { ProductResponseItem } from "../../clients/ProductService/types.gen";
+import ProductCard from "./ProductCard";
+import { productServiceApplicationEndpointsProductEndpointsGetProductsEndpoint } from "../../clients/ProductService";
+import { ProductServiceApplicationQueriesProductProductResponseItem } from "../../clients/ProductService/types.gen";
 
 type Product = {
     image: string;
-} & ProductResponseItem;
+} & ProductServiceApplicationQueriesProductProductResponseItem;
 
 const Products = () => {
     const [products, setProducts] = useState<Product[]>([]);
@@ -14,7 +15,8 @@ const Products = () => {
         const fetchProducts = async () => {
             try {
                 setLoading(true);
-                const productsResp = await getProducts();
+                const productsResp =
+                    await productServiceApplicationEndpointsProductEndpointsGetProductsEndpoint();
                 if (productsResp.status !== 200) {
                     throw new Error(
                         `Error fetching products: ${productsResp.error}`
@@ -46,29 +48,7 @@ const Products = () => {
             ) : (
                 <div className="grid grid-cols-products gap-lg">
                     {products.map((product) => (
-                        <div key={product.id} className="card">
-                            <div className="h-48 overflow-hidden">
-                                <img
-                                    src={product.image}
-                                    alt={product.name}
-                                    className="img-cover"
-                                />
-                            </div>
-                            <div className="p-md">
-                                <h3 className="text-lg font-semibold mb-sm">
-                                    {product.name}
-                                </h3>
-                                <p className="text-primary font-bold mb-sm">
-                                    ${product.price.toFixed(2)}
-                                </p>
-                                <p className="text-sm text-gray-600 line-clamp-3 mb-md">
-                                    {product.description}
-                                </p>
-                                <button className="btn-primary">
-                                    Add to Cart
-                                </button>
-                            </div>
-                        </div>
+                        <ProductCard key={product.id} product={product} />
                     ))}
                 </div>
             )}

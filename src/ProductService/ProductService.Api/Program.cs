@@ -1,21 +1,24 @@
 using EShop.ServiceDefaults;
 using FastEndpoints;
+using FastEndpoints.Swagger;
 using ProductService.Data.Extensions;
 using Scalar.AspNetCore;
-using Shared.Api.OpenAPI;
 
 var builder = WebApplication.CreateBuilder(args);
 
 builder.AddServiceDefaults();
 
-// Add services to the container.
-builder.Services.AddOpenApi(options =>
-{
-    options.AddDocumentTransformer<ServersTransformer>();
-});
 builder.Services.AddControllers();
 builder.Services.AddEndpointsApiExplorer();
-builder.Services.AddFastEndpoints();
+builder.Services
+   .AddFastEndpoints()
+   .SwaggerDocument(x =>
+   {
+       x.NewtonsoftSettings = s =>
+       {
+           s.ContractResolver = new Newtonsoft.Json.Serialization.CamelCasePropertyNamesContractResolver();
+       };
+   });
 
 builder.Services.AddData(builder.Configuration.GetConnectionString("productDb")!);
 builder.Services.AddCors(options =>
@@ -32,7 +35,7 @@ var app = builder.Build();
 
 if (app.Environment.IsDevelopment())
 {
-    app.MapOpenApi();
+    app.UseOpenApi(c => c.Path = "/openapi/{documentName}.json");
     app.MapScalarApiReference();
 }
 

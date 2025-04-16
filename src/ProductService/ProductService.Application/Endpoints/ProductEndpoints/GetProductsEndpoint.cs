@@ -3,9 +3,15 @@ using Microsoft.AspNetCore.Http;
 using ProductService.Application.Utils.Abstractions;
 using ProductService.Contracts.Queries.Product;
 using ProductService.Domain;
+using System.ComponentModel;
 
 namespace ProductService.Application.Endpoints.ProductEndpoints;
 
+/// <summary>
+/// Get products
+/// </summary>
+/// <param name="productQueries"></param>
+[Description("Get products.")]
 public class GetProductsEndpoint(IQueries<Product> productQueries) : Endpoint<GetProducts, GetProductsResponse>
 {
     public override void Configure()
