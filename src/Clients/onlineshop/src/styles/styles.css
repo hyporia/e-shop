@@ -50,6 +50,11 @@ a {
     transition: var(--transition-colors);
 }
 
+ul,
+ol {
+    list-style-type: none;
+}
+
 a:hover {
     color: var(--primary-hover);
 }

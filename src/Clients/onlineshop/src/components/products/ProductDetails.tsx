@@ -113,7 +113,7 @@ const ProductDetails = () => {
 
     return (
         <div className="fade-in py-8">
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-5 gap-8">
+            <div className="grid grid-cols-2 md:grid-cols-2 lg:grid-cols-5 gap-8">
                 {/* Product Images Section - Takes 3/5 of the grid on large screens */}
                 <div className="lg:col-span-3">
                     <div className="bg-gray-50 rounded-xl overflow-hidden">

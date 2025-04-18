@@ -1,7 +1,12 @@
 import { useContext, useEffect, useState } from "react";
-import { AuthContext, AuthContextType } from "../../contexts/authContext";
+import { AuthContext, AuthContextType } from "../contexts/authContext";
 import { ReactNode } from "react";
-import { User, login, getUser, logout } from "../../services/AuthService";
+import {
+    User,
+    login,
+    getUser,
+    logout,
+} from "../clients/AuthService/AuthService";
 import { SigninResourceOwnerCredentialsArgs } from "oidc-client-ts";
 
 export const useAuth = () => {

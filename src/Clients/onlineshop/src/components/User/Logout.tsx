@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { logout } from "../../services/AuthService";
+import { logout } from "../../clients/AuthService/AuthService";
 import { useAuth } from "../../contexts/authContext";
 import { useNavigate } from "react-router-dom";
 import LoadingSpinner from "../shared/LoadingSpinner";

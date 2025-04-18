@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import { useAuth } from "../../contexts/authContext";
 import { useNavigate, NavLink } from "react-router-dom";
-import { login } from "../../services/AuthService";
+import { login } from "../../clients/AuthService/AuthService";
 
 const Login: React.FC = () => {
     const [username, setUsername] = useState("");

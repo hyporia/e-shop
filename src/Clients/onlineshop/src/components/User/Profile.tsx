@@ -1,5 +1,9 @@
 import { useEffect, useState } from "react";
-import { getUser, User, renewToken } from "../../services/AuthService";
+import {
+    getUser,
+    User,
+    renewToken,
+} from "../../clients/AuthService/AuthService";
 import { useNavigate } from "react-router-dom";
 import LoadingSpinner from "../shared/LoadingSpinner";
 

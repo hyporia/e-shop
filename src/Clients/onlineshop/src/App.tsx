@@ -1,5 +1,5 @@
 import { Routes, Route } from "react-router-dom";
-import { AuthProvider } from "./components/auth/authProvider";
+import { AuthProvider } from "./auth/authProvider";
 import Layout from "./components/layout/Layout";
 import Home from "./components/home/Home";
 import Products from "./components/products/Products";

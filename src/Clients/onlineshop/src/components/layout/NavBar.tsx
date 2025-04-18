@@ -34,7 +34,7 @@ const NavBar = (): JSX.Element => {
 
                     {/* Desktop navigation */}
                     <nav className="hidden md:block">
-                        <ul className="flex space-x-4">
+                        <ul className="flex space-x-4 items-center">
                             <li>
                                 <NavLink to="/" className={getLinkClass} end>
                                     Home
