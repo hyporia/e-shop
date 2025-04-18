@@ -35,7 +35,6 @@ public class GetProductsEndpoint(IQueries<Product> productQueries) :
         {
             Id = x.Id,
             Name = x.Name,
-            Description = x.Description,
             Price = x.Price
         }).ToArray();
 }

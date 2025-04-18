@@ -5,7 +5,6 @@ public class GetProducts
     public string? Name { get; set; }
     public decimal? MinPrice { get; set; }
     public decimal? MaxPrice { get; set; }
-    public string? Description { get; set; }
 }
 
 public class ProductResponseItem
@@ -24,9 +23,4 @@ public class ProductResponseItem
     /// The product price.
     /// </summary>
     public required decimal Price { get; set; }
-
-    /// <summary>
-    /// The product description.
-    /// </summary>
-    public required string Description { get; set; }
 }
