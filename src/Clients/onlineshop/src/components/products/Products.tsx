@@ -1,11 +1,11 @@
 import { useEffect, useState } from "react";
 import ProductCard from "./ProductCard";
 import { productServiceApplicationEndpointsProductEndpointsGetProductsEndpoint } from "../../clients/ProductService";
-import { ProductServiceApplicationQueriesProductProductResponseItem } from "../../clients/ProductService/types.gen";
+import { ProductServiceContractsQueriesProductProductResponseItem } from "../../clients/ProductService/types.gen";
 
 type Product = {
     image: string;
-} & ProductServiceApplicationQueriesProductProductResponseItem;
+} & ProductServiceContractsQueriesProductProductResponseItem;
 
 const Products = () => {
     const [products, setProducts] = useState<Product[]>([]);
@@ -22,7 +22,7 @@ const Products = () => {
                         `Error fetching products: ${productsResp.error}`
                     );
                 }
-                const items = productsResp.data?.products || [];
+                const items = productsResp.data || [];
                 const products = items.map((item) => ({
                     ...item,
                     image: "https://picsum.photos/300",

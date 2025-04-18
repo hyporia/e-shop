@@ -1,8 +1,9 @@
-import { ProductServiceApplicationQueriesProductProductResponseItem } from "../../clients/ProductService/types.gen";
+import { Link } from "react-router-dom";
+import { ProductServiceContractsQueriesProductProductResponseItem } from "../../clients/ProductService/types.gen";
 
 type Product = {
     image: string;
-} & ProductServiceApplicationQueriesProductProductResponseItem;
+} & ProductServiceContractsQueriesProductProductResponseItem;
 
 type ProductCardProps = {
     product: Product;
@@ -10,7 +11,10 @@ type ProductCardProps = {
 
 const ProductCard = ({ product }: ProductCardProps) => {
     return (
-        <div className="card">
+        <Link
+            to={`/products/${product.id}`}
+            className="card hover:shadow-lg transition-shadow"
+        >
             <div className="h-48 overflow-hidden">
                 <img
                     src={product.image}
@@ -27,7 +31,7 @@ const ProductCard = ({ product }: ProductCardProps) => {
                 </p>
                 <button className="btn-primary">Add to Cart</button>
             </div>
-        </div>
+        </Link>
     );
 };
 

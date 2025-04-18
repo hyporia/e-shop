@@ -12,6 +12,9 @@ const Login = lazy(() => import("./components/user/Login"));
 const Register = lazy(() => import("./components/user/Register"));
 const Profile = lazy(() => import("./components/user/Profile"));
 const Logout = lazy(() => import("./components/user/Logout"));
+const ProductDetails = lazy(
+    () => import("./components/products/ProductDetails")
+);
 
 const App = (): JSX.Element => {
     const renderRoutes = useCallback(
@@ -25,6 +28,7 @@ const App = (): JSX.Element => {
                 <Route path="/login" element={<Login />} />
                 <Route path="/logout" element={<Logout />} />
                 <Route path="/register" element={<Register />} />
+                <Route path="/products/:id" element={<ProductDetails />} />
             </Routes>
         ),
         []

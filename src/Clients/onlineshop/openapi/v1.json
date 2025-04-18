@@ -11,6 +11,41 @@
     }
   ],
   "paths": {
+    "/api/products/{id}": {
+      "get": {
+        "tags": [
+          "Product",
+          "Api"
+        ],
+        "operationId": "ProductServiceApplicationEndpointsProductEndpointsGetProductByIdEndpoint",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "guid"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Success",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProductServiceContractsQueriesProductGetProductByIdResponse"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Not Found"
+          }
+        }
+      }
+    },
     "/api/products": {
       "get": {
         "tags": [
@@ -18,13 +53,44 @@
           "Api"
         ],
         "operationId": "ProductServiceApplicationEndpointsProductEndpointsGetProductsEndpoint",
+        "parameters": [
+          {
+            "name": "Name",
+            "in": "query",
+            "schema": {
+              "type": "string",
+              "nullable": true
+            }
+          },
+          {
+            "name": "MinPrice",
+            "in": "query",
+            "schema": {
+              "type": "number",
+              "format": "decimal",
+              "nullable": true
+            }
+          },
+          {
+            "name": "MaxPrice",
+            "in": "query",
+            "schema": {
+              "type": "number",
+              "format": "decimal",
+              "nullable": true
+            }
+          }
+        ],
         "responses": {
           "200": {
             "description": "Success",
             "content": {
               "application/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/ProductServiceApplicationQueriesProductGetProductsResponse"
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/ProductServiceContractsQueriesProductProductResponseItem"
+                  }
                 }
               }
             }
@@ -35,19 +101,7 @@
   },
   "components": {
     "schemas": {
-      "ProductServiceApplicationQueriesProductGetProductsResponse": {
-        "type": "object",
-        "additionalProperties": false,
-        "properties": {
-          "products": {
-            "type": "array",
-            "items": {
-              "$ref": "#/components/schemas/ProductServiceApplicationQueriesProductProductResponseItem"
-            }
-          }
-        }
-      },
-      "ProductServiceApplicationQueriesProductProductResponseItem": {
+      "ProductServiceContractsQueriesProductGetProductByIdResponse": {
         "type": "object",
         "additionalProperties": false,
         "properties": {
@@ -66,6 +120,31 @@
             "type": "string"
           }
         }
+      },
+      "ProductServiceContractsQueriesProductGetProductById": {
+        "type": "object",
+        "additionalProperties": false
+      },
+      "ProductServiceContractsQueriesProductProductResponseItem": {
+        "type": "object",
+        "additionalProperties": false,
+        "properties": {
+          "id": {
+            "type": "string",
+            "format": "guid"
+          },
+          "name": {
+            "type": "string"
+          },
+          "price": {
+            "type": "number",
+            "format": "decimal"
+          }
+        }
+      },
+      "ProductServiceContractsQueriesProductGetProducts": {
+        "type": "object",
+        "additionalProperties": false
       }
     },
     "securitySchemes": {
