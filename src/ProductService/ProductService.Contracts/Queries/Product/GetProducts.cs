@@ -7,3 +7,26 @@ public class GetProducts
     public decimal? MaxPrice { get; set; }
     public string? Description { get; set; }
 }
+
+public class ProductResponseItem
+{
+    /// <summary>
+    /// The product ID.
+    /// </summary>
+    public required Guid Id { get; set; }
+
+    /// <summary>
+    /// The product name.
+    /// </summary>
+    public required string Name { get; set; }
+
+    /// <summary>
+    /// The product price.
+    /// </summary>
+    public required decimal Price { get; set; }
+
+    /// <summary>
+    /// The product description.
+    /// </summary>
+    public required string Description { get; set; }
+}

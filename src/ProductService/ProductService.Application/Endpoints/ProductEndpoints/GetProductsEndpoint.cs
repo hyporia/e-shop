@@ -12,30 +12,30 @@ namespace ProductService.Application.Endpoints.ProductEndpoints;
 /// </summary>
 /// <param name="productQueries"></param>
 [Description("Get products.")]
-public class GetProductsEndpoint(IQueries<Product> productQueries) : Endpoint<GetProducts, GetProductsResponse>
+public class GetProductsEndpoint(IQueries<Product> productQueries) :
+    EndpointWithMapping<GetProducts, ProductResponseItem[], IEnumerable<Product>>
 {
     public override void Configure()
     {
         Get("/api/products");
         AllowAnonymous();
         Description(b => b
-            .Produces<GetProductsResponse>(200, "application/json")
+            .Produces<ProductResponseItem[]>(200, "application/json")
             .WithTags("Product"));
     }
 
     public override async Task HandleAsync(GetProducts query, CancellationToken ct)
     {
         var products = await productQueries.GetAllAsync(ct);
-        var response = new GetProductsResponse
-        {
-            Products = products.Select(x => new ProductResponseItem
-            {
-                Id = x.Id,
-                Name = x.Name,
-                Description = x.Description,
-                Price = x.Price
-            }).ToList()
-        };
-        await SendAsync(response, cancellation: ct);
+        await SendAsync(MapFromEntity(products), cancellation: ct);
     }
+
+    public override ProductResponseItem[] MapFromEntity(IEnumerable<Product> e) =>
+        e.Select(x => new ProductResponseItem
+        {
+            Id = x.Id,
+            Name = x.Name,
+            Description = x.Description,
+            Price = x.Price
+        }).ToArray();
 }

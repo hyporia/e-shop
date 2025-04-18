@@ -1,24 +1,29 @@
 namespace ProductService.Contracts.Queries.Product;
 
-public class ProductResponseItem
+public class GetProductById
+{
+    public Guid Id { get; set; }
+}
+
+public class GetProductByIdResponse
 {
     /// <summary>
     /// The product ID.
     /// </summary>
-    public Guid Id { get; set; }
+    public required Guid Id { get; set; }
 
     /// <summary>
     /// The product name.
     /// </summary>
-    public string Name { get; set; }
+    public required string Name { get; set; }
 
     /// <summary>
     /// The product price.
     /// </summary>
-    public decimal Price { get; set; }
+    public required decimal Price { get; set; }
 
     /// <summary>
     /// The product description.
     /// </summary>
-    public string Description { get; set; }
+    public required string Description { get; set; }
 }
