@@ -1,21 +1,98 @@
+/* Error boundary styling */
 .error-boundary {
-    padding: 20px;
-    margin: 20px;
-    border: 1px solid #ff6b6b;
-    border-radius: 4px;
-    background-color: #fff5f5;
-    color: #ff6b6b;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    padding: var(--space-8) var(--space-4);
+    text-align: center;
+    min-height: 60vh;
 }
 
-.error-boundary h2 {
-    margin-top: 0;
-    color: #ff6b6b;
+.error-boundary__icon {
+    width: 64px;
+    height: 64px;
+    color: var(--error);
+    margin-bottom: var(--space-4);
 }
 
-.error-boundary details {
-    margin-top: 10px;
-    padding: 10px;
-    background-color: #fff;
-    border-radius: 4px;
-    border: 1px solid #ffe3e3;
+.error-boundary__title {
+    font-size: var(--text-2xl);
+    font-weight: var(--font-semibold);
+    margin-bottom: var(--space-2);
+    color: var(--text);
+}
+
+.error-boundary__message {
+    margin-bottom: var(--space-5);
+    color: var(--text-light);
+    max-width: 36rem;
+}
+
+.error-boundary__actions {
+    display: flex;
+    gap: var(--space-3);
+}
+
+/* Animation for the error icon */
+@keyframes error-pulse {
+    0% {
+        transform: scale(1);
+    }
+    50% {
+        transform: scale(1.05);
+    }
+    100% {
+        transform: scale(1);
+    }
+}
+
+.error-boundary__icon {
+    animation: error-pulse 2s infinite ease-in-out;
+}
+
+/* Details section with error trace */
+.error-boundary__details {
+    margin-top: var(--space-8);
+    width: 100%;
+    max-width: 600px;
+}
+
+.error-boundary__details-toggle {
+    font-size: var(--text-sm);
+    color: var(--text-light);
+    background: none;
+    border: none;
+    padding: var(--space-2) var(--space-3);
+    border-radius: var(--radius);
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    gap: var(--space-1);
+}
+
+.error-boundary__details-toggle:hover {
+    background-color: var(--gray-100);
+}
+
+.error-boundary__stack {
+    margin-top: var(--space-3);
+    padding: var(--space-3);
+    background-color: var(--gray-100);
+    border-radius: var(--radius);
+    overflow-x: auto;
+    font-family: var(--font-mono);
+    font-size: var(--text-xs);
+    white-space: pre-wrap;
+    color: var(--text);
+}
+
+@media (prefers-color-scheme: dark) {
+    .error-boundary__details-toggle:hover {
+        background-color: var(--gray-700);
+    }
+
+    .error-boundary__stack {
+        background-color: var(--gray-800);
+    }
 }
