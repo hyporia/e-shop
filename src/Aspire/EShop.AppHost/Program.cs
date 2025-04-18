@@ -3,6 +3,7 @@ var builder = DistributedApplication.CreateBuilder(args);
 var messaging = builder
     .AddRabbitMQ("rabbitmq")
     .WithManagementPlugin()
+    .WithContainerName("aspire-e-shop-rabbitmq")
     .WithLifetime(ContainerLifetime.Persistent);
 
 var db = builder
@@ -11,7 +12,10 @@ var db = builder
     {
         x.WithLifetime(ContainerLifetime.Persistent);
         x.WithImageTag("9.1.0");
+        x.WithContainerName("aspire-e-shop-pgadmin");
+        x.WithUrlForEndpoint("http", u => u.DisplayText = "pgAdmin");
     })
+    .WithContainerName("aspire-e-shop-postgres")
     .WithLifetime(ContainerLifetime.Persistent);
 
 var productDb = db.AddDatabase("productDb");
@@ -24,8 +28,10 @@ var userDbMigrator = builder.AddProject<Projects.UserService_DbMigrator>("userse
 var userServiceApi = builder.AddProject<Projects.UserService_Api>("userservice-api")
     .WithReference(messaging)
     .WithReference(userDb)
+    .WithUrlForEndpoint("https", u => u.DisplayText = "Scalar")
     .WaitFor(messaging)
     .WaitForCompletion(userDbMigrator);
+
 
 var productDbMigrator = builder.AddProject<Projects.ProductService_Migrator>("productservice-dbmigrator")
     .WithReference(productDb)
@@ -36,7 +42,9 @@ var productDbMigrator = builder.AddProject<Projects.ProductService_Migrator>("pr
 
 var productServiceApi = builder.AddProject<Projects.ProductService_Api>("productservice-api")
     .WithReference(productDb)
+    .WithUrlForEndpoint("https", u => u.DisplayText = "Scalar")
     .WaitForCompletion(productDbMigrator);
+
 // builder.AddProject<Projects.OrderService_Api>("orderservice-api");
 
 // builder.AddProject<Projects.ShippingService_Api>("shippingservice-api");
@@ -45,6 +53,7 @@ builder.AddNpmApp("react", "../../Clients/onlineshop", "dev")
     .WithReference(userServiceApi)
     .WithEnvironment("BROWSER", "none") // Disable opening browser on npm start
     .WithHttpEndpoint(3000, env: "VITE_PORT", isProxied: false)
+    .WithUrlForEndpoint("http", u => u.DisplayText = "e-shop")
     .WithEnvironment("VITE_USERSERVICE_API_URL", userServiceApi.GetEndpoint("https"))
     .WithEnvironment("VITE_PRODUCTSERVICE_API_URL", productServiceApi.GetEndpoint("https"))
     .WithExternalHttpEndpoints()

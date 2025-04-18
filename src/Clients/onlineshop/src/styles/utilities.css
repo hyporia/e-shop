@@ -195,6 +195,26 @@
     transition-duration: 150ms;
 }
 
+/* Animation Utilities */
+@keyframes logo-spin {
+    from {
+        transform: rotate(0deg);
+    }
+    to {
+        transform: rotate(360deg);
+    }
+}
+
+.animate-spin {
+    animation: logo-spin infinite 20s linear;
+}
+
+@media (prefers-reduced-motion: no-preference) {
+    .motion-safe\:animate-spin {
+        animation: logo-spin infinite 20s linear;
+    }
+}
+
 /* Product Utilities */
 .grid-cols-products {
     grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
@@ -232,7 +252,7 @@
 }
 
 .btn-primary:hover {
-    background: var(--primary-dark);
+    background: var(--primary-hover);
 }
 
 .line-clamp-3 {
@@ -240,4 +260,8 @@
     -webkit-line-clamp: 3;
     -webkit-box-orient: vertical;
     overflow: hidden;
+}
+
+.list-none {
+    list-style-type: none;
 }

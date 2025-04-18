@@ -1,13 +1,11 @@
 namespace ProductService.Contracts.Queries.Product;
 
-public class GetProducts
+public class GetProductById
 {
-    public string? Name { get; set; }
-    public decimal? MinPrice { get; set; }
-    public decimal? MaxPrice { get; set; }
+    public Guid Id { get; set; }
 }
 
-public class ProductResponseItem
+public class GetProductByIdResponse
 {
     /// <summary>
     /// The product ID.
@@ -23,4 +21,9 @@ public class ProductResponseItem
     /// The product price.
     /// </summary>
     public required decimal Price { get; set; }
+
+    /// <summary>
+    /// The product description.
+    /// </summary>
+    public required string Description { get; set; }
 }

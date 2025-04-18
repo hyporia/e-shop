@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import { useAuth } from "../../contexts/authContext";
-import { redirect } from "react-router-dom";
+import { redirect, NavLink } from "react-router-dom";
 import { login } from "../../services/AuthService";
 
 const Login: React.FC = () => {
@@ -42,6 +42,15 @@ const Login: React.FC = () => {
                 />
             </div>
             <button type="submit">Login</button>
+            <p className="mt-4 text-center text-gray-600">
+                Don't have an account?{" "}
+                <NavLink
+                    to="/register"
+                    className="text-blue-600 hover:underline"
+                >
+                    Register here
+                </NavLink>
+            </p>
         </form>
     );
 };

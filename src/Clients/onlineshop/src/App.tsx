@@ -12,7 +12,6 @@ const Login = lazy(() => import("./components/user/Login"));
 const Register = lazy(() => import("./components/user/Register"));
 const Profile = lazy(() => import("./components/user/Profile"));
 const Logout = lazy(() => import("./components/user/Logout"));
-const Products = lazy(() => import("./components/products/Products"));
 
 const App = (): JSX.Element => {
     const renderRoutes = useCallback(
@@ -23,11 +22,9 @@ const App = (): JSX.Element => {
                     <Route path="/profile" element={<Profile />} />
                 </Route>
                 <Route path="/home" element={<Home />} />
-                <Route path="/products" element={<Products />} />
                 <Route path="/login" element={<Login />} />
                 <Route path="/logout" element={<Logout />} />
                 <Route path="/register" element={<Register />} />
-                <Route path="/products" element={<Products />} />
             </Routes>
         ),
         []

@@ -1,4 +1,5 @@
 import "./Home.css";
+import Products from "../products/Products";
 
 const Home = (): JSX.Element => {
     return (
@@ -11,6 +12,7 @@ const Home = (): JSX.Element => {
                     Discover our wide range of products and enjoy shopping with
                     us!
                 </p>
+                <Products />
             </main>
         </div>
     );

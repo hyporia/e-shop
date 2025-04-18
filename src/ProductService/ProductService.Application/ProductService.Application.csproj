@@ -6,6 +6,10 @@
     <Nullable>enable</Nullable>
   </PropertyGroup>
 
+    <ItemGroup>
+	    <PackageReference Include="FastEndpoints" />
+    </ItemGroup>
+	
   <ItemGroup>
     <ProjectReference Include="..\ProductService.Contracts\ProductService.Contracts.csproj" />
     <ProjectReference Include="..\ProductService.Domain\ProductService.Domain.csproj" />
