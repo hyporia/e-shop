@@ -1,6 +1,8 @@
 using EShop.ServiceDefaults;
 using FastEndpoints;
 using FastEndpoints.Swagger;
+using ProductService.Application.Endpoints.ProductEndpoints;
+using ProductService.Contracts.Queries.Product;
 using ProductService.Data.Extensions;
 using Scalar.AspNetCore;
 
@@ -8,10 +10,9 @@ var builder = WebApplication.CreateBuilder(args);
 
 builder.AddServiceDefaults();
 
-builder.Services.AddControllers();
 builder.Services.AddEndpointsApiExplorer();
 builder.Services
-   .AddFastEndpoints()
+   .AddFastEndpoints(x => x.Assemblies = [typeof(GetProductByIdEndpoint).Assembly])
    .SwaggerDocument(x =>
    {
        x.NewtonsoftSettings = s =>
@@ -44,8 +45,6 @@ app.MapDefaultEndpoints();
 app.UseHttpsRedirection();
 
 app.UseCors("AllowLocalhost3000");
-
-app.UseAuthorization();
 
 app.UseFastEndpoints();
 

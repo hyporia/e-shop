@@ -20,8 +20,9 @@ var db = builder
 
 var productDb = db.AddDatabase("productDb");
 var userDb = db.AddDatabase("userDb");
+var orderDb = db.AddDatabase("orderDb");
 
-var userDbMigrator = builder.AddProject<Projects.UserService_DbMigrator>("userservice-dbmigrator")
+var userDbMigrator = builder.AddProject<Projects.UserService_Migrator>("userservice-dbmigrator")
     .WithReference(userDb)
     .WaitFor(userDb);
 
@@ -32,20 +33,27 @@ var userServiceApi = builder.AddProject<Projects.UserService_Api>("userservice-a
     .WaitFor(messaging)
     .WaitForCompletion(userDbMigrator);
 
-
-var productDbMigrator = builder.AddProject<Projects.ProductService_Migrator>("productservice-dbmigrator")
-    .WithReference(productDb)
-    .WaitFor(productDb);
-
 // builder.AddProject<Projects.NotificationService_Api>("notificationservice")
 //     .WithReference(messaging);
+
+var productServiceMigrator = builder.AddProject<Projects.ProductService_Migrator>("productservice-migrator")
+    .WithReference(productDb)
+    .WaitFor(productDb);
 
 var productServiceApi = builder.AddProject<Projects.ProductService_Api>("productservice-api")
     .WithReference(productDb)
     .WithUrlForEndpoint("https", u => u.DisplayText = "Scalar")
-    .WaitForCompletion(productDbMigrator);
+    .WaitForCompletion(productServiceMigrator);
 
-// builder.AddProject<Projects.OrderService_Api>("orderservice-api");
+
+var orderServiceMigrator = builder.AddProject<Projects.OrderService_Migrator>("orderservice-dbmigrator")
+    .WithReference(orderDb)
+    .WaitFor(orderDb);
+
+var orderServiceApi = builder.AddProject<Projects.OrderService_Api>("orderservice-api")
+    .WithReference(orderDb)
+    .WithUrlForEndpoint("https", u => u.DisplayText = "Scalar")
+    .WaitForCompletion(orderServiceMigrator);
 
 // builder.AddProject<Projects.ShippingService_Api>("shippingservice-api");
 

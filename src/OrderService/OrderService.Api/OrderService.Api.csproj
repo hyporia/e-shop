@@ -6,5 +6,12 @@
     </PropertyGroup>
     <ItemGroup>
         <ProjectReference Include="..\..\Aspire\EShop.ServiceDefaults\EShop.ServiceDefaults.csproj"/>
+        <ProjectReference Include="..\OrderService.Application\OrderService.Application.csproj"/>
+        <ProjectReference Include="..\OrderService.Data\OrderService.Data.csproj"/>
+    </ItemGroup>
+    <ItemGroup>
+        <PackageReference Include="FastEndpoints"/>
+        <PackageReference Include="Scalar.AspNetCore" />
+        <PackageReference Include="FastEndpoints.Swagger"/>
     </ItemGroup>
 </Project>
