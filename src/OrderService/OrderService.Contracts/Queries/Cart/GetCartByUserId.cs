@@ -2,7 +2,7 @@ namespace OrderService.Contracts.Queries.Cart;
 
 public class GetCartByUserId
 {
-    public required Guid UserId { get; set; }
+    // No properties needed - user ID will be extracted from JWT token
 }
 
 public class CartResponse

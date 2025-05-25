@@ -14,7 +14,8 @@ namespace UserService.Application.Handlers.Commands;
 internal class ExchangeUserCredentialsHandler(
     UserManager<User> userManager,
     SignInManager<User> signInManager,
-    IOpenIddictApplicationManager applicationManager)
+    IOpenIddictApplicationManager applicationManager,
+    IOpenIddictScopeManager scopeManager)
     : IRequestHandler<ExchangeUserCredentials, Result<ClaimsPrincipal, string>>
 {
     public async Task<Result<ClaimsPrincipal, string>> Handle(ExchangeUserCredentials command,
@@ -41,13 +42,13 @@ internal class ExchangeUserCredentialsHandler(
             return "Invalid credentials.";
         }
 
-        var identity = await CreateIdentity(user, application, request.GetScopes());
+        var identity = await CreateIdentity(user, application, request.GetScopes(), cancellationToken);
 
         return new ClaimsPrincipal(identity);
     }
 
     private async Task<ClaimsIdentity> CreateIdentity(User user, OpenIddictEntityFrameworkCoreApplication application,
-        IEnumerable<string> requestedScopes)
+        IEnumerable<string> requestedScopes, CancellationToken ct)
     {
         var identity = new ClaimsIdentity(
             TokenValidationParameters.DefaultAuthenticationType,
@@ -56,11 +57,16 @@ internal class ExchangeUserCredentialsHandler(
 
         var roles = await userManager.GetRolesAsync(user);
 
+        var resources = await scopeManager
+            .ListResourcesAsync([.. requestedScopes], ct)
+            .ToListAsync(ct);
+
         identity.SetClaim(Claims.Subject, user.Id)
             .SetClaim(Claims.Email, user.Email)
             .SetClaim(Claims.Name, user.UserName)
             .SetClaims(Claims.Role, [.. roles])
             .SetScopes(requestedScopes)
+            .SetResources(resources)
             .SetDestinations(claim => GetDestinations(claim, application));
 
         return identity;

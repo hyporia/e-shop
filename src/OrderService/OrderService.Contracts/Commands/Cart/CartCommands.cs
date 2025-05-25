@@ -3,11 +3,6 @@ namespace OrderService.Contracts.Commands.Cart;
 public class AddItemToCart
 {
     /// <summary>
-    /// The user ID who owns the cart.
-    /// </summary>
-    public required Guid UserId { get; set; }
-
-    /// <summary>
     /// The product ID to add to cart.
     /// </summary>
     public required Guid ProductId { get; set; }
@@ -31,12 +26,7 @@ public class AddItemToCart
 public class UpdateCartItemQuantity
 {
     /// <summary>
-    /// The user ID who owns the cart.
-    /// </summary>
-    public required Guid UserId { get; set; }
-
-    /// <summary>
-    /// The product ID to update.
+    /// The product ID whose quantity to update.
     /// </summary>
     public required Guid ProductId { get; set; }
 
@@ -49,20 +39,7 @@ public class UpdateCartItemQuantity
 public class RemoveItemFromCart
 {
     /// <summary>
-    /// The user ID who owns the cart.
-    /// </summary>
-    public required Guid UserId { get; set; }
-
-    /// <summary>
     /// The product ID to remove from cart.
     /// </summary>
     public required Guid ProductId { get; set; }
-}
-
-public class ClearCart
-{
-    /// <summary>
-    /// The user ID who owns the cart.
-    /// </summary>
-    public required Guid UserId { get; set; }
 }

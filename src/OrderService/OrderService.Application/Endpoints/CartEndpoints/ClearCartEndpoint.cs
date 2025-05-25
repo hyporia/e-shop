@@ -1,6 +1,8 @@
 using FastEndpoints;
 using Microsoft.AspNetCore.Http;
+using OpenIddict.Validation.AspNetCore;
 using OrderService.Application.Utils.Abstractions;
+using OrderService.Application.Utils.Extensions;
 using OrderService.Contracts.Commands.Cart;
 using System.ComponentModel;
 
@@ -10,21 +12,30 @@ namespace OrderService.Application.Endpoints.CartEndpoints;
 /// Clear cart
 /// </summary>
 [Description("Clear cart.")]
-public class ClearCartEndpoint(ICartRepository cartRepository) : Endpoint<ClearCart>
+public class ClearCartEndpoint(ICartRepository cartRepository) : EndpointWithoutRequest
 {
     public override void Configure()
     {
-        Delete("/api/cart/{UserId}");
-        AllowAnonymous(); // TODO: Add authentication when user service is ready
+        Delete("/api/cart");
+        // Use JWT authentication instead of allowing anonymous access
+        AuthSchemes(OpenIddictValidationAspNetCoreDefaults.AuthenticationScheme);
         Description(b => b
             .Produces(200)
             .Produces(404)
+            .Produces(403)
             .WithTags("Cart"));
     }
 
-    public override async Task HandleAsync(ClearCart command, CancellationToken ct)
+    public override async Task HandleAsync(CancellationToken ct)
     {
-        var cart = await cartRepository.GetByUserIdAsync(command.UserId, ct);
+        var userId = User.GetUserId();
+        if (!userId.HasValue)
+        {
+            await SendUnauthorizedAsync(ct);
+            return;
+        }
+
+        var cart = await cartRepository.GetByUserIdAsync(userId.Value, ct);
 
         if (cart == null)
         {

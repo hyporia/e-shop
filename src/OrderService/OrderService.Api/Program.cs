@@ -1,8 +1,10 @@
 using EShop.ServiceDefaults;
 using FastEndpoints;
 using FastEndpoints.Swagger;
+using OrderService.Api.Extensions;
 using OrderService.Application.Endpoints.CartEndpoints;
 using OrderService.Data.Extensions;
+using OpenIddict.Validation.AspNetCore;
 using Scalar.AspNetCore;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -21,6 +23,20 @@ builder.Services
    });
 
 builder.Services.AddData(builder.Configuration.GetConnectionString("OrderDb")!);
+
+// Add OpenIddict validation to validate JWT tokens issued by UserService
+builder.Services.AddOpenIddictValidation(builder.Configuration);
+
+// Configure authentication with OpenIddict as the default scheme
+builder.Services.AddAuthentication(options =>
+{
+    options.DefaultAuthenticateScheme = OpenIddictValidationAspNetCoreDefaults.AuthenticationScheme;
+    options.DefaultChallengeScheme = OpenIddictValidationAspNetCoreDefaults.AuthenticationScheme;
+    options.DefaultScheme = OpenIddictValidationAspNetCoreDefaults.AuthenticationScheme;
+});
+
+// Add authorization services
+builder.Services.AddAuthorization();
 
 builder.Services.AddCors(options =>
 {
@@ -46,6 +62,10 @@ app.MapDefaultEndpoints();
 app.UseHttpsRedirection();
 
 app.UseCors("AllowLocalhost3000");
+
+// Add authentication and authorization middleware
+app.UseAuthentication();
+app.UseAuthorization();
 
 app.UseFastEndpoints();
 

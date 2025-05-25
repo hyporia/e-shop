@@ -53,6 +53,7 @@ var orderServiceMigrator = builder.AddProject<Projects.OrderService_Migrator>("o
 var orderServiceApi = builder.AddProject<Projects.OrderService_Api>("orderservice-api")
     .WithReference(orderDb)
     .WithUrlForEndpoint("https", u => u.DisplayText = "Scalar")
+    .WithEnvironment("Authentication__Issuer", userServiceApi.GetEndpoint("https"))
     .WaitForCompletion(orderServiceMigrator);
 
 // builder.AddProject<Projects.ShippingService_Api>("shippingservice-api");

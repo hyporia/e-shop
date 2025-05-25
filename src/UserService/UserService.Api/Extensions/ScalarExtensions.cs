@@ -11,7 +11,7 @@ public static class ScalarExtensions
             cfg.WithOAuth2Authentication(authCfg =>
             {
                 authCfg.ClientId = "scalar";
-                authCfg.Scopes = ["user_api"];
+                authCfg.Scopes = ["user_api", "order_api"];
             });
         });
         return app;

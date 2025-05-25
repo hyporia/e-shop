@@ -38,16 +38,24 @@ public class DevelopmentAuthorizationDataSeeder(IServiceScopeFactory serviceScop
     private static async Task CreateCustomScopesAsync(IServiceScope scope, CancellationToken cancellationToken)
     {
         var manager = scope.ServiceProvider.GetRequiredService<IOpenIddictScopeManager>();
-        if (await manager.FindByNameAsync("user_api", cancellationToken) is not null)
+
+        if (await manager.FindByNameAsync("user_api", cancellationToken) is null)
         {
-            return;
+            await manager.CreateAsync(new OpenIddictScopeDescriptor
+            {
+                Name = "user_api"
+                // Resources = { "users_server" }
+            }, cancellationToken);
         }
 
-        await manager.CreateAsync(new OpenIddictScopeDescriptor
+        if (await manager.FindByNameAsync("order_api", cancellationToken) is null)
         {
-            Name = "user_api"
-            // Resources = { "users_server" }
-        }, cancellationToken);
+            await manager.CreateAsync(new OpenIddictScopeDescriptor
+            {
+                Name = "order_api",
+                Resources = { "order_service" }
+            }, cancellationToken);
+        }
     }
 
     private static async Task CreateApplicationsAsync(IServiceScope scope, CancellationToken cancellationToken)
@@ -77,7 +85,8 @@ public class DevelopmentAuthorizationDataSeeder(IServiceScopeFactory serviceScop
                         Permissions.Scopes.Email,
                         Permissions.Scopes.Profile,
                         Permissions.Scopes.Roles,
-                        Permissions.Prefixes.Scope + "user_api"
+                        Permissions.Prefixes.Scope + "user_api",
+                        Permissions.Prefixes.Scope + "order_api"
                     },
                     Requirements = { Requirements.Features.ProofKeyForCodeExchange }
                 }, cancellationToken
@@ -105,9 +114,27 @@ public class DevelopmentAuthorizationDataSeeder(IServiceScopeFactory serviceScop
                         Permissions.Scopes.Email,
                         Permissions.Scopes.Profile,
                         Permissions.Scopes.Roles,
-                        Permissions.Prefixes.Scope + "user_api"
+                        Permissions.Prefixes.Scope + "user_api",
+                        Permissions.Prefixes.Scope + "order_api"
                     },
                     Requirements = { Requirements.Features.ProofKeyForCodeExchange }
+                }, cancellationToken
+            );
+        }
+
+        // Register OrderService as a resource server for introspection
+        if (await manager.FindByClientIdAsync("order_service", cancellationToken) is null)
+        {
+            await manager.CreateAsync(
+                new OpenIddictApplicationDescriptor
+                {
+                    ClientId = "order_service",
+                    ClientSecret = "ORDER-SERVICE-SECRET-KEY",
+                    ClientType = ClientTypes.Confidential,
+                    Permissions =
+                    {
+                        Permissions.Endpoints.Introspection
+                    }
                 }, cancellationToken
             );
         }

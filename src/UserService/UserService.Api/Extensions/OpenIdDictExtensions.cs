@@ -31,7 +31,7 @@ public static class OpenIdDictExtensions
                     .EnableTokenEndpointPassthrough()
                     .EnableEndSessionEndpointPassthrough();
 
-                options.RegisterScopes(Scopes.OpenId, Scopes.Profile, Scopes.Roles, Scopes.Email, Scopes.Phone);
+                options.RegisterScopes(Scopes.OpenId, Scopes.Profile, Scopes.Roles, Scopes.Email, Scopes.Phone, "user_api", "order_api");
 
                 if (isDevelopment)
                 {

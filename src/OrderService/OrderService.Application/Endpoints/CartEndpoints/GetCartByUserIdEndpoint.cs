@@ -1,6 +1,8 @@
 using FastEndpoints;
 using Microsoft.AspNetCore.Http;
+using OpenIddict.Validation.AspNetCore;
 using OrderService.Application.Utils.Abstractions;
+using OrderService.Application.Utils.Extensions;
 using OrderService.Contracts.Queries.Cart;
 using OrderService.Domain;
 using System.ComponentModel;
@@ -12,21 +14,32 @@ namespace OrderService.Application.Endpoints.CartEndpoints;
 /// </summary>
 [Description("Get cart by user ID.")]
 public class GetCartByUserIdEndpoint(ICartRepository cartRepository) :
-    EndpointWithMapping<GetCartByUserId, CartResponse?, Cart?>
+    EndpointWithoutRequest<CartResponse?>
 {
     public override void Configure()
     {
-        Get("/api/cart/{UserId}");
-        AllowAnonymous(); // TODO: Add authentication when user service is ready
+        Get("/api/cart");
+
+        // Use JWT authentication instead of allowing anonymous access
+        AuthSchemes(OpenIddictValidationAspNetCoreDefaults.AuthenticationScheme);
+
         Description(b => b
             .Produces<CartResponse>(200)
             .Produces(404)
             .WithTags("Cart"));
     }
 
-    public override async Task HandleAsync(GetCartByUserId query, CancellationToken ct)
+    public override async Task HandleAsync(CancellationToken ct)
     {
-        var cart = await cartRepository.GetByUserIdAsync(query.UserId, ct);
+        // Extract user ID from JWT token
+        var userId = User.GetUserId();
+        if (!userId.HasValue)
+        {
+            await SendUnauthorizedAsync(ct);
+            return;
+        }
+
+        var cart = await cartRepository.GetByUserIdAsync(userId.Value, ct);
 
         if (cart == null)
         {
@@ -37,7 +50,7 @@ public class GetCartByUserIdEndpoint(ICartRepository cartRepository) :
         await SendOkAsync(MapFromEntity(cart), ct);
     }
 
-    public override CartResponse? MapFromEntity(Cart? cart)
+    public static CartResponse? MapFromEntity(Cart? cart)
     {
         if (cart == null) return null;
 
