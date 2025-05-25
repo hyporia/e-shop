@@ -2,7 +2,7 @@ import {
     SigninResourceOwnerCredentialsArgs,
     UserManager,
 } from "oidc-client-ts";
-import { authConfig } from "../config/authConfig";
+import { authConfig } from "../../config/authConfig";
 
 export class User {
     constructor(public id: string, public name: string) {}

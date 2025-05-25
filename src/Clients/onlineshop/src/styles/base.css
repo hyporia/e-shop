@@ -1,107 +1,288 @@
-/* Modern CSS Reset */
+/* Base & reset styles */
 *,
 *::before,
 *::after {
     box-sizing: border-box;
 }
 
-* {
-    margin: 0;
-    padding: 0;
-    font: inherit;
+:root {
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+    text-rendering: optimizeLegibility;
+    scroll-behavior: smooth;
+    -webkit-tap-highlight-color: transparent;
 }
 
-html {
-    color-scheme: dark light;
-    hanging-punctuation: first last;
+html,
+body {
+    margin: 0;
+    padding: 0;
+    min-height: 100%;
+    min-width: 100%;
+    font-family: var(--font-sans);
 }
 
 body {
-    min-height: 100vh;
-    font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI",
-        Roboto, Oxygen, Ubuntu, Cantarell, "Open Sans", "Helvetica Neue",
-        sans-serif;
-    line-height: 1.5;
-    -webkit-font-smoothing: antialiased;
+    color: var(--text);
+    background-color: var(--background);
+    font-size: var(--text-base);
+    line-height: var(--leading-normal);
+    overflow-x: hidden;
 }
 
-img,
-picture,
-svg,
-video {
-    display: block;
-    max-width: 100%;
+/* Focus styles */
+:focus-visible {
+    outline: 2px solid var(--primary);
+    outline-offset: 2px;
 }
 
+/* Typography */
 h1,
 h2,
 h3,
 h4,
 h5,
 h6 {
-    text-wrap: balance;
-}
-
-p {
-    text-wrap: pretty;
-}
-
-@media (prefers-reduced-motion: no-preference) {
-    :has(:target) {
-        scroll-behavior: smooth;
-        scroll-padding-top: var(--space-md);
-    }
-}
-
-/* Base element styles */
-a {
-    color: var(--primary);
-    text-decoration: none;
-    transition: color 0.2s ease;
-}
-
-a:hover {
-    color: var(--primary-hover);
-}
-
-ul li a {
+    margin-top: 0;
+    margin-bottom: var(--space-4);
+    font-weight: var(--font-semibold);
+    line-height: var(--leading-tight);
     color: var(--text);
 }
 
-ul li a:hover {
-    color: var(--primary);
+h1 {
+    font-size: var(--text-4xl);
 }
 
-ul li a.active {
-    color: var(--primary);
+h2 {
+    font-size: var(--text-3xl);
+}
+
+h3 {
+    font-size: var(--text-2xl);
+}
+
+h4 {
+    font-size: var(--text-xl);
+}
+
+h5 {
+    font-size: var(--text-lg);
+}
+
+h6 {
+    font-size: var(--text-base);
+}
+
+p {
+    margin-top: 0;
+    margin-bottom: var(--space-4);
+}
+
+small {
+    font-size: var(--text-sm);
+}
+
+strong {
+    font-weight: var(--font-semibold);
+}
+
+em {
+    font-style: italic;
+}
+
+blockquote {
+    margin-left: 0;
+    margin-right: 0;
+    padding-left: var(--space-4);
+    border-left: 2px solid var(--border);
+    color: var(--text-light);
+    font-style: italic;
+}
+
+code,
+pre {
+    font-family: var(--font-mono);
+    font-size: var(--text-sm);
+    background-color: var(--gray-100);
+    border-radius: var(--radius);
+}
+
+code {
+    padding: 0.2rem 0.4rem;
+}
+
+pre {
+    padding: var(--space-4);
+    overflow-x: auto;
 }
 
 a {
     color: var(--primary);
     text-decoration: none;
-    transition: color 0.2s ease;
+    transition: var(--transition-colors);
 }
 
 a:hover {
     color: var(--primary-hover);
+}
+
+/* Lists */
+ul,
+ol {
+    padding-left: var(--space-5);
+    margin-top: 0;
+    margin-bottom: var(--space-4);
+}
+
+li {
+    margin-bottom: var(--space-2);
+}
+
+/* Form elements */
+input,
+textarea,
+select,
+button {
+    font: inherit;
+    color: inherit;
 }
 
 button {
     cursor: pointer;
-    background: none;
+    background: transparent;
     border: none;
+    padding: 0;
+    color: inherit;
 }
 
-/* Focus styles */
-:focus-visible {
-    outline: 2px solid var(--accent);
-    outline-offset: 2px;
+/* Images & Media */
+img,
+video {
+    max-width: 100%;
+    height: auto;
 }
 
-/* Root element styles */
-#root {
-    max-width: 1280px;
-    margin: 0 auto;
-    padding: 2rem;
-    text-align: center;
+/* SVG sizing fixes */
+svg {
+    display: inline-block;
+    vertical-align: middle;
+    max-width: 100%;
+}
+
+/* Ensure SVG elements inside icons or buttons are properly sized */
+button svg,
+a svg,
+.icon svg {
+    width: 1em;
+    height: 1em;
+}
+
+/* Fix for specific icon sizes in components */
+.w-4 {
+    width: 1rem !important;
+}
+.h-4 {
+    height: 1rem !important;
+}
+.w-5 {
+    width: 1.25rem !important;
+}
+.h-5 {
+    height: 1.25rem !important;
+}
+.w-6 {
+    width: 1.5rem !important;
+}
+.h-6 {
+    height: 1.5rem !important;
+}
+
+/* Table styles */
+table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-bottom: var(--space-4);
+}
+
+th {
+    text-align: left;
+    padding: var(--space-2) var(--space-3);
+    border-bottom: 2px solid var(--border);
+    font-weight: var(--font-semibold);
+}
+
+td {
+    padding: var(--space-2) var(--space-3);
+    border-bottom: 1px solid var(--border);
+}
+
+tbody tr:last-child td {
+    border-bottom: none;
+}
+
+/* Horizontal rule */
+hr {
+    border: 0;
+    height: 1px;
+    background-color: var(--border);
+    margin: var(--space-6) 0;
+}
+
+/* Accessibility */
+.sr-only {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    padding: 0;
+    margin: -1px;
+    overflow: hidden;
+    clip: rect(0, 0, 0, 0);
+    white-space: nowrap;
+    border-width: 0;
+}
+
+/* Selection */
+::selection {
+    background-color: var(--primary-light);
+    color: var(--primary);
+}
+
+/* Scrollbar styling (webkit browsers) */
+::-webkit-scrollbar {
+    width: 8px;
+    height: 8px;
+}
+
+::-webkit-scrollbar-track {
+    background: var(--gray-100);
+}
+
+::-webkit-scrollbar-thumb {
+    background: var(--gray-300);
+    border-radius: var(--radius);
+}
+
+::-webkit-scrollbar-thumb:hover {
+    background: var(--gray-400);
+}
+
+/* Dark mode adjustments */
+@media (prefers-color-scheme: dark) {
+    ::-webkit-scrollbar-track {
+        background: var(--gray-800);
+    }
+
+    ::-webkit-scrollbar-thumb {
+        background: var(--gray-600);
+    }
+
+    ::-webkit-scrollbar-thumb:hover {
+        background: var(--gray-500);
+    }
+
+    code,
+    pre {
+        background-color: var(--gray-800);
+    }
 }

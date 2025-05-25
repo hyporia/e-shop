@@ -1,45 +1,39 @@
-import { lazy, Suspense, useCallback } from "react";
-import { Route, Routes } from "react-router-dom";
-import { AuthProvider } from "./components/auth/authProvider";
-import NavBar from "./components/layout/NavBar";
-import ProtectedRoutes from "./components/shared/ProtectedRoute";
-import LoadingSpinner from "./components/shared/LoadingSpinner";
+import { Routes, Route } from "react-router-dom";
+import { AuthProvider } from "./auth/authProvider";
+import Layout from "./components/layout/Layout";
+import Home from "./components/home/Home";
+import Products from "./components/products/Products";
+import ProductDetails from "./components/products/ProductDetails";
+import Login from "./components/user/Login";
+import Register from "./components/user/Register";
+import Logout from "./components/user/Logout";
+import Profile from "./components/user/Profile";
+import NotFound from "./components/shared/NotFound";
 import ErrorBoundary from "./components/shared/ErrorBoundary";
+import "./styles/styles.css";
 
-// Memoized lazy-loaded components
-const Home = lazy(() => import("./components/home/Home"));
-const Login = lazy(() => import("./components/user/Login"));
-const Register = lazy(() => import("./components/user/Register"));
-const Profile = lazy(() => import("./components/user/Profile"));
-const Logout = lazy(() => import("./components/user/Logout"));
-
-const App = (): JSX.Element => {
-    const renderRoutes = useCallback(
-        () => (
-            <Routes>
-                <Route path="/" element={<Home />} />
-                <Route element={<ProtectedRoutes />}>
-                    <Route path="/profile" element={<Profile />} />
-                </Route>
-                <Route path="/home" element={<Home />} />
-                <Route path="/login" element={<Login />} />
-                <Route path="/logout" element={<Logout />} />
-                <Route path="/register" element={<Register />} />
-            </Routes>
-        ),
-        []
-    );
-
+function App() {
     return (
-        <AuthProvider>
-            <NavBar />
-            <ErrorBoundary>
-                <Suspense fallback={<LoadingSpinner />}>
-                    {renderRoutes()}
-                </Suspense>
-            </ErrorBoundary>
-        </AuthProvider>
+        <ErrorBoundary>
+            <AuthProvider>
+                <Layout>
+                    <Routes>
+                        <Route path="/" element={<Home />} />
+                        <Route path="/products" element={<Products />} />
+                        <Route
+                            path="/products/:id"
+                            element={<ProductDetails />}
+                        />
+                        <Route path="/login" element={<Login />} />
+                        <Route path="/register" element={<Register />} />
+                        <Route path="/logout" element={<Logout />} />
+                        <Route path="/profile" element={<Profile />} />
+                        <Route path="*" element={<NotFound />} />
+                    </Routes>
+                </Layout>
+            </AuthProvider>
+        </ErrorBoundary>
     );
-};
+}
 
 export default App;
