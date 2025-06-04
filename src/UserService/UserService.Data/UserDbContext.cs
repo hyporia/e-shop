@@ -8,8 +8,13 @@ public class UserDbContext : IdentityDbContext<User>
 {
     public UserDbContext(DbContextOptions<UserDbContext> options) : base(options) { }
 
-    protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder) =>
-        optionsBuilder
-            .UseOpenIddict()
-            .UseNpgsql();
+    protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
+    {
+        if (!optionsBuilder.IsConfigured)
+        {
+            optionsBuilder.UseNpgsql();
+        }
+
+        optionsBuilder.UseOpenIddict();
+    }
 }
